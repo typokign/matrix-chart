@@ -12,6 +12,9 @@ spec:
       app.kubernetes.io/instance: {{ .Release.Name }}
   template:
     metadata:
+      annotations:
+        # re-roll deployment on homeserver.yaml change
+        checksum/homeserver-yaml: {{ include (print $.Template.BasePath "/synapse/configmap.yaml") . | sha256sum }}
       labels:
         app.kubernetes.io/name: {{ include "matrix.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
@@ -30,6 +33,10 @@ spec:
             - name: http
               containerPort: 80
               protocol: TCP
+          volumeMounts:
+            - name: homeserver-yaml
+              mountPath: /data/homeserver.yaml
+              subPath: homeserver.yaml
           livenessProbe:
             httpGet:
               path: /
@@ -42,3 +49,7 @@ spec:
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+      volumes:
+        - name: homeserver-yaml
+          configMap:
+            name: {{ include "matrix.fullname" . }}-homeserver-yaml

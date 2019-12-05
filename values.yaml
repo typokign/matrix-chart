@@ -2,6 +2,129 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+# Runtime configuration for Synapse and settings related to the Matrix protocol
+matrix:
+  # Domain name of the server
+  # This is not necessarily the host name where the service is reachable. In fact, you may want to omit any subdomains
+  # from this value as the server name set here will be the name of your homeserver in the fediverse, and will be the
+  # domain name at the end of every user's username
+  serverName: "example.com"
+
+  # Enable anonymous telemetry to matrix.org
+  telemetry: false
+
+  # URL where Synapse can be reached.
+  # This is *optional* if an Ingress is configured below. If baseUrl is unspecified, the first host of the
+  # Ingress will be used
+  # baseUrl: "matrix.example.com"
+
+  # Set to false to disable presence (online/offline indicators)
+  presence: true
+
+  # Set to true to block non-admins from inviting users to any rooms
+  blockNonAdminInvites: false
+
+  # Set to false to disable message searching
+  search: true
+
+  # Email address of the administrator
+  adminEmail: "admin@example.com"
+
+  # Settings related to image and multimedia uploads
+  uploads:
+    # Max upload size in bytes
+    maxSize: 10M
+
+    # Max image size in pixels
+    maxPixels: 32M
+
+  # Settings related to federation
+  federation:
+    # Set to false to disable federation and run an isolated homeserver
+    enabled: true
+
+    # Set to false to disallow members of other homeservers from fetching *public* rooms
+    allowPublicRooms: true
+
+    # Whitelist of domains to federate with (comment for all domains except blacklisted)
+    # whitelist: []
+
+    # IP addresses to blacklist federation requests to
+    blacklist:
+      - '127.0.0.0/8'
+      - '10.0.0.0/8'
+      - '172.16.0.0/12'
+      - '192.168.0.0/16'
+      - '100.64.0.0/10'
+      - '169.254.0.0/16'
+      - '::1/128'
+      - 'fe80::/64'
+      - 'fc00::/7'
+
+  # User registration settings
+  registration:
+    # Allow new users to register an account
+    enabled: false
+
+    # Allow users to join rooms as a guest
+    allowGuests: false
+
+    # Required "3PIDs" - third-party identifiers such as email or msisdn (SMS)
+    # required3Pids:
+    #   - email
+    #   - msisdn
+
+    # Rooms to automatically join all new users to
+    autoJoinRooms: []
+    # - "#welcome:example.com"
+
+  # Settings for the URL preview crawler
+  urlPreviews:
+    # Enable URL previews.
+    # WARNING: Make sure to review the default rules below to ensure that users cannot crawl
+    # sensitive internal endpoints in your cluster.
+    enabled: false
+
+    # Blacklists and whitelists for the URL preview crawler
+    rules:
+      # Maximum size of a crawlable page. Keep this low to prevent a DOS vector
+      maxSize: 10M
+
+      # Whitelist and blacklist for crawlable IP addresses
+      ip:
+        # whitelist:
+        blacklist:
+          - '127.0.0.0/8'
+          - '10.0.0.0/8'
+          - '172.16.0.0/12'
+          - '192.168.0.0/16'
+          - '100.64.0.0/10'
+          - '169.254.0.0/16'
+          - '::1/128'
+          - 'fe80::/64'
+          - 'fc00::/7'
+
+      # Whitelist and blacklist based on URL pattern matching
+      url: {}
+        # whitelist:
+        # blacklist:
+        #  # blacklist any URL with a username in its URI
+        #  - username: '*'
+        #
+        #  # blacklist all *.google.com URLs
+        #  - netloc: 'google.com'
+        #  - netloc: '*.google.com'
+        #
+        #  # blacklist all plain HTTP URLs
+        #  - scheme: 'http'
+        #
+        #  # blacklist http(s)://www.acme.com/foo
+        #  - netloc: 'www.acme.com'
+        #    path: '/foo'
+        #
+        #  # blacklist any URL with a literal IPv4 address
+        #  - netloc: '^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$'
+
 # Synapse deployment configuration
 synapse:
   image:
@@ -32,12 +155,7 @@ fullnameOverride: ""
 ingress:
   enabled: false
   annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
   hosts:
     - host: chart-example.local
       paths: []
   tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
