@@ -125,6 +125,13 @@ matrix:
         #  # blacklist any URL with a literal IPv4 address
         #  - netloc: '^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$'
 
+# Persistent volumes configuration
+volumes:
+  # Uploaded attachments/multimedia
+  media:
+    # Capacity of the media persistent volume claim
+    capacity: 10Gi
+
 # Synapse deployment configuration
 synapse:
   image:
