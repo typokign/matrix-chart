@@ -25,6 +25,33 @@ spec:
     {{- end }}
       securityContext:
         {{- toYaml .Values.synapse.podSecurityContext | nindent 8 }}
+      # generate signing key only on fresh install
+      {{- if .Release.IsInstall }}
+      initContainers:
+        - name: generate-signing-key
+          image: "{{ .Values.synapse.image.repository }}:{{ .Values.synapse.image.tag }}"
+          imagePullPolicy: {{ .Values.synapse.image.pullPolicy }}
+          env:
+            - name: SYNAPSE_SERVER_NAME
+              value: {{ .Values.matrix.serverName }}
+            - name: SYNAPSE_REPORT_STATS
+              value: {{ .Values.matrix.telemetry | ternary "yes" "no" | quote }}
+          command: ["python"]
+          args:
+            - "-m"
+            - "synapse.app.homeserver"
+            - "--config-path"
+            - "/data/homeserver.yaml"
+            - "--keys-directory"
+            - "/data/keys"
+            - "--generate-keys"
+          volumeMounts:
+            - name: homeserver-yaml
+              mountPath: /data/homeserver.yaml
+              subPath: homeserver.yaml
+            - name: signing-key
+              mountPath: /data/keys
+      {{- end }} # end if .Release.IsInstall
       containers:
         - name: "synapse"
           image: "{{ .Values.synapse.image.repository }}:{{ .Values.synapse.image.tag }}"
@@ -37,6 +64,8 @@ spec:
             - name: homeserver-yaml
               mountPath: /data/homeserver.yaml
               subPath: homeserver.yaml
+            - name: signing-key
+              mountPath: /data/keys
             - name: media-store
               mountPath: /data/media_store
             - name: uploads
@@ -57,6 +86,9 @@ spec:
         - name: homeserver-yaml
           configMap:
             name: {{ include "matrix.fullname" . }}-homeserver-yaml
+        - name: signing-key
+          secret:
+            secretName: {{ include "matrix.fullname" . }}-signing-keys
         - name: media-store
           persistentVolumeClaim:
             claimName: {{ include "matrix.fullname" . }}-media-store

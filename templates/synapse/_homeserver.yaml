@@ -1029,7 +1029,7 @@ report_stats: {{ .Values.matrix.telemetry }}
 
 # Path to the signing key to sign messages with
 #
-signing_key_path: "/data/{{ .Values.matrix.serverName }}.signing.key"
+signing_key_path: "/data/keys/{{ .Values.matrix.serverName }}.signing.key"
 
 # The keys that the server used to sign messages with but won't use
 # to sign new messages. E.g. it has lost its private key

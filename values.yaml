@@ -136,7 +136,7 @@ volumes:
 synapse:
   image:
     repository: "matrixdotorg/synapse"
-    tag: latest
+    tag: v1.7.0
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
