@@ -41,6 +41,7 @@ matrix:
   # Settings related to federation
   federation:
     # Set to false to disable federation and run an isolated homeserver
+    # This also deploys a LoadBalancer Service for the federation port (8448)
     enabled: true
 
     # Set to false to disallow members of other homeservers from fetching *public* rooms
