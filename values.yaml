@@ -155,10 +155,9 @@ synapse:
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
-    port: 80
+    port: 8008
   replicaCount: 1
   podSecurityContext: {}
-  # fsGroup: 2000
 
   securityContext:
     capabilities:

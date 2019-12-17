@@ -57,7 +57,7 @@ spec:
           imagePullPolicy: {{ .Values.synapse.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: 80
+              containerPort: 8008
               protocol: TCP
           volumeMounts:
             - name: synapse-config
@@ -70,11 +70,11 @@ spec:
               mountPath: /data/uploads
           livenessProbe:
             httpGet:
-              path: /
+              path: /_matrix/static/
               port: http
           readinessProbe:
             httpGet:
-              path: /
+              path: /_matrix/static/
               port: http
           {{- with .Values.synapse.resources }}
           resources:
