@@ -1,9 +1,40 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "matrix.fullname" . }}-homeserver-yaml
+  name: {{ include "matrix.fullname" . }}-synapse-config
   labels:
 {{ include "matrix.labels" . | nindent 4}}
 data:
   homeserver.yaml: |
     {{ include "homeserver.yaml" . | nindent 4 }}
+  {{ .Values.matrix.serverName }}.log.config: |
+    version: 1
+
+    formatters:
+      precise:
+        format: '%(asctime)s - %(name)s - %(lineno)d - %(levelname)s - %(request)s - %(message)s'
+
+    filters:
+      context:
+        (): synapse.util.logcontext.LoggingContextFilter
+        request: ""
+
+    handlers:
+      console:
+        class: logging.StreamHandler
+        formatter: precise
+        filters: [context]
+
+    loggers:
+      synapse:
+        level: WARNING
+
+      synapse.storage.SQL:
+        # beware: increasing this to DEBUG will make synapse log sensitive
+        # information such as access tokens.
+        level: WARNING
+
+
+    root:
+      level: WARNING
+      handlers: [console]

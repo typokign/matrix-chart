@@ -14,7 +14,7 @@ spec:
     metadata:
       annotations:
         # re-roll deployment on homeserver.yaml change
-        checksum/homeserver-yaml: {{ include (print $.Template.BasePath "/synapse/configmap.yaml") . | sha256sum }}
+        checksum/synapse-config: {{ include (print $.Template.BasePath "/synapse/configmap.yaml") . | sha256sum }}
       labels:
         app.kubernetes.io/name: {{ include "matrix.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
@@ -46,9 +46,8 @@ spec:
             - "/data/keys"
             - "--generate-keys"
           volumeMounts:
-            - name: homeserver-yaml
-              mountPath: /data/homeserver.yaml
-              subPath: homeserver.yaml
+            - name: synapse-config
+              mountPath: /data
             - name: signing-key
               mountPath: /data/keys
       {{- end }} # end if .Release.IsInstall
@@ -61,9 +60,8 @@ spec:
               containerPort: 80
               protocol: TCP
           volumeMounts:
-            - name: homeserver-yaml
-              mountPath: /data/homeserver.yaml
-              subPath: homeserver.yaml
+            - name: synapse-config
+              mountPath: /data
             - name: signing-key
               mountPath: /data/keys
             - name: media-store
@@ -83,9 +81,9 @@ spec:
             {{- toYaml . | nindent 12 }}
           {{- end }}
       volumes:
-        - name: homeserver-yaml
+        - name: synapse-config
           configMap:
-            name: {{ include "matrix.fullname" . }}-homeserver-yaml
+            name: {{ include "matrix.fullname" . }}-synapse-config
         - name: signing-key
           persistentVolumeClaim:
             claimName: {{ include "matrix.fullname" . }}-signing-key
