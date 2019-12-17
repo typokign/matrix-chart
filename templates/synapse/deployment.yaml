@@ -8,7 +8,7 @@ spec:
   replicas: {{ .Values.synapse.replicaCount }}
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "matrix.name" . }}
+      app.kubernetes.io/name: {{ include "matrix.name" . }}-synapse
       app.kubernetes.io/instance: {{ .Release.Name }}
   template:
     metadata:
@@ -16,7 +16,7 @@ spec:
         # re-roll deployment on homeserver.yaml change
         checksum/synapse-config: {{ include (print $.Template.BasePath "/synapse/configmap.yaml") . | sha256sum }}
       labels:
-        app.kubernetes.io/name: {{ include "matrix.name" . }}
+        app.kubernetes.io/name: {{ include "matrix.name" . }}-synapse
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
     {{- with .Values.imagePullSecrets }}

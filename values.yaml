@@ -158,15 +158,21 @@ synapse:
     port: 8008
   replicaCount: 1
   podSecurityContext: {}
+  resources: {}
 
-  securityContext:
-    capabilities:
-      drop:
-        - ALL
-    readOnlyRootFilesystem: true
-    runAsNonRoot: true
-    runAsUser: 1000
-
+# Riot deployment configuration
+riot:
+  # Set to false to disable a deployment of riot-web. Users will still be able to connect via any other instances of riot-web (such as https://riot.im), riot-desktop, or any other Matrix clients
+  enabled: true
+  image:
+    repository: "bubuntux/riot-web"
+    tag: v1.5.6
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 80
+  replicaCount: 1
+  podSecurityContext: {}
   resources: {}
 
 imagePullSecrets: []
@@ -178,4 +184,5 @@ ingress:
   tls: []
   hosts:
     synapse: matrix.chart-example.local
+    riot: riot.chart-example.local
   annotations: {}

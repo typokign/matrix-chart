@@ -32,4 +32,13 @@ spec:
             backend:
               serviceName: "{{ include "matrix.fullname" . }}-synapse"
               servicePort: {{ .Values.synapse.service.port }}
+    {{- if .Values.riot.enabled }}
+    - host: {{ .Values.ingress.hosts.riot }}
+      http:
+        paths:
+          - path: "/"
+            backend:
+              serviceName: "{{ include "matrix.fullname" . }}-riot"
+              servicePort: {{ .Values.riot.service.port }}
+    {{- end }}
 {{- end }}

@@ -1,0 +1,46 @@
+{{- if .Values.riot.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "matrix.fullname" . }}-riot
+  labels:
+{{ include "matrix.labels" . | indent 4 }}
+spec:
+  replicas: {{ .Values.riot.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "matrix.name" . }}-riot
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "matrix.name" . }}-riot
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      securityContext:
+        {{- toYaml .Values.riot.podSecurityContext | nindent 8 }}
+      containers:
+        - name: "riot"
+          image: "{{ .Values.riot.image.repository }}:{{ .Values.riot.image.tag }}"
+          imagePullPolicy: {{ .Values.riot.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          {{- with .Values.riot.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+{{- end }}
