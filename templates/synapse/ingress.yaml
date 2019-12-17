@@ -1,0 +1,30 @@
+{{- if .Values.synapse.ingress.enabled -}}
+{{- if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
+apiVersion: networking.k8s.io/v1beta1
+{{- else -}}
+apiVersion: extensions/v1beta1
+{{- end }}
+kind: Ingress
+metadata:
+  name: {{ include "matrix.fullname" . }}-synapse
+  labels:
+    {{- include "matrix.labels" . | nindent 4 }}
+  {{- with .Values.synapse.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+{{- if .Values.synapse.ingress.tlsSecret }}
+  tls:
+    - hosts: [{{ .Values.synapse.ingress.host }}]
+      secretName: {{ .Values.synapse.ingress.tlsSecret }}
+{{- end }}
+  rules:
+    - host: {{ .Values.synapse.ingress.host }}
+      http:
+        paths:
+          - path: "/"
+            backend:
+              serviceName: "{{ include "matrix.fullname" . }}-synapse"
+              servicePort: {{ .Values.synapse.service.port }}
+{{- end }}

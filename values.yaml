@@ -169,14 +169,14 @@ synapse:
 
   resources: {}
 
+  ingress:
+    enabled: true
+    # Set the externally-facing hostname of Synapse here
+    host: matrix.chart-example.local
+    # Uncomment and set this to use an existing TLS secret for HTTPS
+#    tlsSecret: ""
+    annotations: {}
+
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
-
-ingress:
-  enabled: false
-  annotations: {}
-  hosts:
-    - host: chart-example.local
-      paths: []
-  tls: []
