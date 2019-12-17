@@ -26,7 +26,7 @@ pid_file: /data/homeserver.pid
 {{- if .Values.matrix.baseUrl }}
 public_baseurl: {{ .Values.matrix.baseUrl }}
 {{- else }}
-public_baseurl: {{ .Values.synapse.ingress.host }}
+public_baseurl: {{ .Values.ingress.hosts.synapse }}
 {{- end }}
 # Set the soft limit on the number of file descriptors synapse can use
 # Zero is used to indicate synapse should set the soft limit to the
