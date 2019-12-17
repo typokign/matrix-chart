@@ -13,6 +13,9 @@ spec:
       app.kubernetes.io/instance: {{ .Release.Name }}
   template:
     metadata:
+      annotations:
+        # re-roll deployment on config change
+        checksum/riot-config: {{ include (print $.Template.BasePath "/riot/configmap.yaml") . | sha256sum }}
       labels:
         app.kubernetes.io/name: {{ include "matrix.name" . }}-riot
         app.kubernetes.io/instance: {{ .Release.Name }}
@@ -31,6 +34,11 @@ spec:
             - name: http
               containerPort: 80
               protocol: TCP
+          volumeMounts:
+            - mountPath: /etc/riot-web/config.json
+              name: riot-config
+              subPath: config.json
+              readOnly: true
           livenessProbe:
             httpGet:
               path: /
@@ -43,4 +51,8 @@ spec:
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+      volumes:
+        - name: riot-config
+          configMap:
+            name: {{ include "matrix.fullname" . }}-riot-config
 {{- end }}

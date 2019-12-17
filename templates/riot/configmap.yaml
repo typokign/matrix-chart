@@ -1,0 +1,48 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "matrix.fullname" . }}-riot-config
+  labels:
+{{ include "matrix.labels" . | nindent 4}}
+data:
+  config.json: |
+    {
+      "default_server_name": {{ .Values.matrix.serverName | quote }},
+      "brand": {{ .Values.riot.branding.brand | quote }},
+      "branding": {
+        {{- if .Values.riot.branding.welcomeBackgroundUrl }}
+        "welcomeBackgroundUrl": {{ .Values.riot.branding.welcomeBackgroundUrl | quote }},
+        {{- end }}
+        {{- if .Values.riot.branding.authHeaderLogoUrl }}
+        "authHeaderLogoUrl": {{ .Values.riot.branding.authHeaderLogoUrl | quote }},
+        {{- end }}
+        {{- if .Values.riot.branding.authFooterLinks }}
+        "authFooterLinks": {{ .Values.riot.branding.authFooterLinks | toJson }},
+        {{- end }}
+      },
+      {{- if .Values.riot.integrations.enabled }}
+      "integrations_ui_url": {{ .Values.riot.integrations.ui | quote }},
+      "integrations_rest_url": {{ .Values.riot.integrations.api | quote }},
+      "integrations_widgets_urls": {{ .Values.riot.integrations.widgets | toJson }},
+      {{- end }}
+      {{- if .Values.riot.labs }} {{/* if not empty */}}
+      "showLabsSettings": true,
+      {{- else }}
+      "showLabsSettings": false,
+      {{- end }}
+      "features": {
+        {{- if .Values.riot.labs }}
+        {{- range initial .Values.riot.labs }}
+        {{ . | quote }}: "labs",
+        {{- end }}
+        {{ last .Values.riot.labs | quote }}: "labs"
+        {{- end }}
+      },
+      "roomDirectory": {
+        "servers": {{ .Values.riot.roomDirectoryServers | toJson }}
+      },
+      {{- if .Values.riot.welcomeUserId }}
+      "welcomeUserId": {{ .Values.riot.welcomeUserId | quote }},
+      {{- end }}
+      "permalinkPrefix": {{ .Values.riot.permalinkPrefix | quote }}
+    }

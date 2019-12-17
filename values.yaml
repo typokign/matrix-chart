@@ -164,6 +164,58 @@ synapse:
 riot:
   # Set to false to disable a deployment of riot-web. Users will still be able to connect via any other instances of riot-web (such as https://riot.im), riot-desktop, or any other Matrix clients
   enabled: true
+
+  # Organization/enterprise branding
+  branding:
+    # Shown in email notifications
+    brand: "Riot"
+    # Background of login splash screen
+    welcomeBackgroundUrl: ""
+    # Logo shown at top of login screen
+    authHeaderLogoUrl: ""
+    # Array of links to show at the bottom of the login screen
+    authFooterLinks: []
+#      - text:
+#        url:
+
+  # Integration server configuration
+  integrations:
+    # Set to false to disable the Integrations menu (including widgets, bots, and other plugins to Riot)
+    enabled: true
+    # UI to load when a user selects the Integrations button at the top-right of a room
+    ui: "https://scalar.vector.im/"
+    # API for the integration server
+    api: "https://scalar.vector.im/api"
+    # Array of API paths providing widgets
+    widgets:
+      - "https://scalar.vector.im/_matrix/integrations/v1"
+      - "https://scalar.vector.im/api"
+      - "https://scalar-staging.vector.im/_matrix/integrations/v1"
+      - "https://scalar-staging.vector.im/api"
+      - "https://scalar-staging.riot.im/scalar/api"
+
+  # Experimental features in riot-web, see https://github.com/vector-im/riot-web/blob/develop/docs/labs.md
+  labs:
+    - feature_pinning
+    - feature_custom_status
+    - feature_custom_tags
+    - feature_state_counters
+    - feature_many_integration_managers
+    - feature_mjolnir
+    - feature_dm_verification
+    - feature_cross_signing
+    - feature_event_indexing
+
+  # Servers to show in the Explore menu (the current server is always shown)
+  roomDirectoryServers:
+    - matrix.org
+
+  # Set to the user ID (@username:domain.tld) of a bot to invite all new users to a DM with the bot upon registration
+  welcomeUserId: ""
+
+  # Prefix before permalinks generated when users share links to rooms, users, or messages. If running an unfederated Synapse, set the below to the URL of your Riot instance.
+  permalinkPrefix: "https://matrix.to"
+
   image:
     repository: "bubuntux/riot-web"
     tag: v1.5.6
