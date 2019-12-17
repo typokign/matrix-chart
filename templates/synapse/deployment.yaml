@@ -87,8 +87,8 @@ spec:
           configMap:
             name: {{ include "matrix.fullname" . }}-homeserver-yaml
         - name: signing-key
-          secret:
-            secretName: {{ include "matrix.fullname" . }}-signing-keys
+          persistentVolumeClaim:
+            claimName: {{ include "matrix.fullname" . }}-signing-key
         - name: media-store
           persistentVolumeClaim:
             claimName: {{ include "matrix.fullname" . }}-media-store
