@@ -476,17 +476,23 @@ acme:
 #
 #tls_fingerprints: [{"sha256": "<base64_encoded_sha256_fingerprint>"}]
 
-
-
 ## Database ##
 
 database:
     # The database engine name
-    name: "sqlite3"
+    name: "psycopg2"
     # Arguments to pass to the engine
     args:
-        # Path to the database
-        database: "/data/homeserver.db"
+        user: "{{ .Values.postgresql.postgresqlUsername }}"
+        password: "{{ .Values.postgresql.postgresqlPassword }}"
+        database: "{{ .Values.postgresql.postgresqlDatabase }}"
+        {{- if .Values.postgresql.enabled }}
+        host: "{{ include "matrix.fullname" . }}-postgresql"
+        {{- else }}
+        host: "{{ .Values.postgresql.hostname }}"
+        {{- end}}
+        cp_min: 5
+        cp_max: 10
 
 # Number of events to cache in memory.
 #

@@ -132,6 +132,21 @@ volumes:
     # Capacity of the media persistent volume claim
     capacity: 10Gi
 
+# PostgreSQL Database Configuration
+postgresql:
+  # Whether to deploy the stable/postgresql chart with this chart. If disabled, make sure PostgreSQL is available at the hostname below and credentials are configured below
+  enabled: true
+
+  postgresqlUsername: matrix
+  postgresqlPassword: matrix
+  postgresqlDatabase: matrix
+
+  # Set this if postgresql.enabled = false
+  hostname: ""
+
+  persistence:
+    size: 8Gi
+
 # Synapse deployment configuration
 synapse:
   image:
