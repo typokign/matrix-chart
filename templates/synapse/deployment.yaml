@@ -75,6 +75,8 @@ spec:
               mountPath: /data/media_store
             - name: uploads
               mountPath: /data/uploads
+            - name: tmp
+              mountPath: /tmp
           livenessProbe:
             httpGet:
               path: /_matrix/static/
@@ -87,6 +89,7 @@ spec:
             capabilities:
               drop:
                 - ALL
+            readOnlyRootFilesystem: true
           {{- with .Values.synapse.resources }}
           resources:
             {{- toYaml . | nindent 12 }}
@@ -103,4 +106,6 @@ spec:
             claimName: {{ include "matrix.fullname" . }}-media-store
         # Ephemeral in-progress uploads
         - name: uploads
+          emptyDir: {}
+        - name: tmp
           emptyDir: {}

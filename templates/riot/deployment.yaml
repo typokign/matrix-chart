@@ -67,6 +67,7 @@ spec:
             capabilities:
               drop:
                 - ALL
+            readOnlyRootFilesystem: true
           {{- with .Values.riot.resources }}
           resources:
             {{- toYaml . | nindent 12 }}

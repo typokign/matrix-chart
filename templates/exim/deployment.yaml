@@ -42,6 +42,7 @@ spec:
             capabilities:
               drop:
                 - ALL
+            readOnlyRootFilesystem: true
           {{- with .Values.mail.relay.resources }}
           resources:
             {{- toYaml . | nindent 12 }}
