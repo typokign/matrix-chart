@@ -57,7 +57,7 @@ spec:
           imagePullPolicy: {{ .Values.synapse.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: {{ .Values.synapse.service.port }}
+              containerPort: 8008
               protocol: TCP
           volumeMounts:
             - name: synapse-config
