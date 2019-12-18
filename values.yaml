@@ -148,6 +148,11 @@ postgresql:
   persistence:
     size: 8Gi
 
+  securityContext:
+    enabled: true
+    runAsUser: 1000
+    fsGroup: 1000
+
 # Synapse Kubernetes resource settings
 synapse:
   image:
@@ -158,7 +163,6 @@ synapse:
     type: ClusterIP
     port: 80
   replicaCount: 1
-  podSecurityContext: {}
   resources: {}
 
 # Riot Web client configuration
@@ -226,7 +230,6 @@ riot:
     type: ClusterIP
     port: 80
   replicaCount: 1
-  podSecurityContext: {}
   resources: {}
 
 # Settings for email notifications
@@ -252,7 +255,6 @@ mail:
       type: ClusterIP
       port: 25
     replicaCount: 1
-    podSecurityContext: {}
     resources: {}
 
   # External mail server

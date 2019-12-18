@@ -20,12 +20,14 @@ spec:
         app.kubernetes.io/name: {{ include "matrix.name" . }}-riot
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
-    {{- with .Values.imagePullSecrets }}
+      {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
-    {{- end }}
+      {{- end }}
       securityContext:
-        {{- toYaml .Values.riot.podSecurityContext | nindent 8 }}
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
       containers:
         - name: "riot"
           image: "{{ .Values.riot.image.repository }}:{{ .Values.riot.image.tag }}"
@@ -39,6 +41,8 @@ spec:
               name: riot-config
               subPath: config.json
               readOnly: true
+            - mountPath: /var/cache/nginx
+              name: nginx-cache
           livenessProbe:
             httpGet:
               path: /
@@ -55,4 +59,6 @@ spec:
         - name: riot-config
           configMap:
             name: {{ include "matrix.fullname" . }}-riot-config
+        - name: nginx-cache
+          emptyDir: {}
 {{- end }}

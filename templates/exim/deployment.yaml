@@ -17,12 +17,13 @@ spec:
         app.kubernetes.io/name: {{ include "matrix.name" . }}-exim-relay
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
-    {{- with .Values.imagePullSecrets }}
+      {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
-    {{- end }}
+      {{- end }}
       securityContext:
-        {{- toYaml .Values.mail.relay.podSecurityContext | nindent 8 }}
+        runAsUser: 100
+        runAsGroup: 101
       containers:
         - name: "exim-relay"
           image: "{{ .Values.mail.relay.image.repository }}:{{ .Values.mail.relay.image.tag }}"
