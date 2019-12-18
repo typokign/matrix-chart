@@ -38,6 +38,10 @@ spec:
           readinessProbe:
             tcpSocket:
               port: 8025
+          securityContext:
+            capabilities:
+              drop:
+                - ALL
           {{- with .Values.mail.relay.resources }}
           resources:
             {{- toYaml . | nindent 12 }}

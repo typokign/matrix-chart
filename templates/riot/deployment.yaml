@@ -51,6 +51,10 @@ spec:
             httpGet:
               path: /
               port: http
+          securityContext:
+            capabilities:
+              drop:
+                - ALL
           {{- with .Values.riot.resources }}
           resources:
             {{- toYaml . | nindent 12 }}

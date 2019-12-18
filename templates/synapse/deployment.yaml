@@ -83,6 +83,10 @@ spec:
             httpGet:
               path: /_matrix/static/
               port: http
+          securityContext:
+            capabilities:
+              drop:
+                - ALL
           {{- with .Values.synapse.resources }}
           resources:
             {{- toYaml . | nindent 12 }}
