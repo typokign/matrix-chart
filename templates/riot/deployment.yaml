@@ -34,15 +34,27 @@ spec:
           imagePullPolicy: {{ .Values.riot.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: 80
+              containerPort: 8080
               protocol: TCP
           volumeMounts:
             - mountPath: /etc/riot-web/config.json
               name: riot-config
               subPath: config.json
               readOnly: true
+            - mountPath: /etc/nginx/nginx.conf
+              name: riot-config
+              subPath: nginx.conf
+              readOnly: true
+            - mountPath: /etc/nginx/conf.d/default.conf
+              name: riot-config
+              subPath: default.conf
+              readOnly: true
             - mountPath: /var/cache/nginx
-              name: nginx-cache
+              name: ephemeral
+              subPath: cache
+            - mountPath: /var/run/pid
+              name: ephemeral
+              subPath: pid
           livenessProbe:
             httpGet:
               path: /
@@ -63,6 +75,7 @@ spec:
         - name: riot-config
           configMap:
             name: {{ include "matrix.fullname" . }}-riot-config
-        - name: nginx-cache
+        # ephemeral cache, PID file, and any other temporary files nginx needs access to
+        - name: ephemeral
           emptyDir: {}
 {{- end }}
