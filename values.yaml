@@ -148,7 +148,7 @@ postgresql:
   persistence:
     size: 8Gi
 
-# Synapse deployment configuration
+# Synapse Kubernetes resource settings
 synapse:
   image:
     repository: "matrixdotorg/synapse"
@@ -161,7 +161,7 @@ synapse:
   podSecurityContext: {}
   resources: {}
 
-# Riot deployment configuration
+# Riot Web client configuration
 riot:
   # Set to false to disable a deployment of riot-web. Users will still be able to connect via any other instances of riot-web (such as https://riot.im), riot-desktop, or any other Matrix clients
   enabled: true
@@ -179,7 +179,7 @@ riot:
 #      - text:
 #        url:
 
-  # Integration server configuration
+  # Riot integrations configuration
   integrations:
     # Set to false to disable the Integrations menu (including widgets, bots, and other plugins to Riot)
     enabled: true
@@ -217,6 +217,7 @@ riot:
   # Prefix before permalinks generated when users share links to rooms, users, or messages. If running an unfederated Synapse, set the below to the URL of your Riot instance.
   permalinkPrefix: "https://matrix.to"
 
+  # Riot Kubernetes resource settings
   image:
     repository: "bubuntux/riot-web"
     tag: v1.5.6
@@ -227,6 +228,40 @@ riot:
   replicaCount: 1
   podSecurityContext: {}
   resources: {}
+
+# Settings for email notifications
+mail:
+  # Set to false to disable all email notifications
+  # NOTE: If enabled, either enable the Exim relay or configure an external mail server below
+  enabled: true
+  # Name and email address for outgoing mail
+  from: "Matrix <matrix@example.com>"
+  # Optional: Riot instance URL.
+  # If the ingress is enabled, this is unnecessary.
+  # If the ingress is disabled and this is left unspecified, emails will contain a link to https://riot.im
+  riotUrl: ""
+
+  # Exim relay
+  relay:
+    enabled: true
+    image:
+      repository: "devture/exim-relay"
+      tag: "4.92.2-r0-0"
+      pullPolicy: IfNotPresent
+    service:
+      type: ClusterIP
+      port: 25
+    replicaCount: 1
+    podSecurityContext: {}
+    resources: {}
+
+  # External mail server
+  external:
+    host: ""
+    port: 25  # SSL: 465, STARTTLS: 587
+    username: ""
+    password: ""
+    requireTransportSecurity: true
 
 imagePullSecrets: []
 nameOverride: ""

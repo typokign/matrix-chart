@@ -1247,86 +1247,97 @@ password_config:
 #
 # If your SMTP server requires authentication, the optional smtp_user &
 # smtp_pass variables should be used
-#
-#email:
-#   enable_notifs: false
-#   smtp_host: "localhost"
-#   smtp_port: 25 # SSL: 465, STARTTLS: 587
-#   smtp_user: "exampleusername"
-#   smtp_pass: "examplepassword"
-#   require_transport_security: false
-#   notif_from: "Your Friendly %(app)s homeserver <noreply@example.com>"
-#   app_name: Matrix
-#
-#   # Enable email notifications by default
-#   #
-#   notif_for_new_users: true
-#
-#   # Defining a custom URL for Riot is only needed if email notifications
-#   # should contain links to a self-hosted installation of Riot; when set
-#   # the "app_name" setting is ignored
-#   #
-#   riot_base_url: "http://localhost/riot"
-#
-#   # Configure the time that a validation email or text message code
-#   # will expire after sending
-#   #
-#   # This is currently used for password resets
-#   #
-#   #validation_token_lifetime: 1h
-#
-#   # Template directory. All template files should be stored within this
-#   # directory. If not set, default templates from within the Synapse
-#   # package will be used
-#   #
-#   # For the list of default templates, please see
-#   # https://github.com/matrix-org/synapse/tree/master/synapse/res/templates
-#   #
-#   #template_dir: res/templates
-#
-#   # Templates for email notifications
-#   #
-#   notif_template_html: notif_mail.html
-#   notif_template_text: notif_mail.txt
-#
-#   # Templates for account expiry notices
-#   #
-#   expiry_template_html: notice_expiry.html
-#   expiry_template_text: notice_expiry.txt
-#
-#   # Templates for password reset emails sent by the homeserver
-#   #
-#   #password_reset_template_html: password_reset.html
-#   #password_reset_template_text: password_reset.txt
-#
-#   # Templates for registration emails sent by the homeserver
-#   #
-#   #registration_template_html: registration.html
-#   #registration_template_text: registration.txt
-#
-#   # Templates for validation emails sent by the homeserver when adding an email to
-#   # your user account
-#   #
-#   #add_threepid_template_html: add_threepid.html
-#   #add_threepid_template_text: add_threepid.txt
-#
-#   # Templates for password reset success and failure pages that a user
-#   # will see after attempting to reset their password
-#   #
-#   #password_reset_template_success_html: password_reset_success.html
-#   #password_reset_template_failure_html: password_reset_failure.html
-#
-#   # Templates for registration success and failure pages that a user
-#   # will see after attempting to register using an email or phone
-#   #
-#   #registration_template_success_html: registration_success.html
-#   #registration_template_failure_html: registration_failure.html
-#
-#   # Templates for success and failure pages that a user will see after attempting
-#   # to add an email or phone to their account
-#   #
-#   #add_threepid_success_html: add_threepid_success.html
-#   #add_threepid_failure_html: add_threepid_failure.html
+
+email:
+    enable_notifs: {{ .Values.mail.enabled }}
+    notif_from: {{ .Values.mail.from }}
+    {{- if .Values.mail.relay }}
+    smtp_host: {{ include "matrix.fullname" . }}-exim-relay
+    smtp_port: {{ .Values.mail.relay.service.port }}
+    {{- else }}
+    smtp_host: {{ .Values.mail.external.host }}
+    smtp_port: {{ .Values.mail.external.port }}
+    smtp_user: {{ .Values.mail.external.username }}
+    smtp_pass: {{ .Values.mail.external.password }}
+    require_transport_security: {{ .Values.mail.external.requireTransportSecurity }}
+    {{- end }}
+    app_name: Matrix
+
+    # Enable email notifications by default
+    #
+    notif_for_new_users: true
+
+    # Defining a custom URL for Riot is only needed if email notifications
+    # should contain links to a self-hosted installation of Riot; when set
+    # the "app_name" setting is ignored
+
+    {{- if .Values.mail.riotUrl }}
+    riot_base_url: {{ .Values.mail.riotUrl }}
+    {{- else if .Values.ingress.enabled }}
+    riot_base_url: {{ .Values.ingress.hosts.riot }}
+    {{- else }}
+    riot_base_url: ""
+    {{- end }}
+
+    # Configure the time that a validation email or text message code
+    # will expire after sending
+    #
+    # This is currently used for password resets
+    #
+    #validation_token_lifetime: 1h
+
+    # Template directory. All template files should be stored within this
+    # directory. If not set, default templates from within the Synapse
+    # package will be used
+    #
+    # For the list of default templates, please see
+    # https://github.com/matrix-org/synapse/tree/master/synapse/res/templates
+    #
+    #template_dir: res/templates
+
+    # Templates for email notifications
+
+    notif_template_html: notif_mail.html
+    notif_template_text: notif_mail.txt
+
+    # Templates for account expiry notices
+
+    expiry_template_html: notice_expiry.html
+    expiry_template_text: notice_expiry.txt
+
+    # Templates for password reset emails sent by the homeserver
+
+    password_reset_template_html: password_reset.html
+    password_reset_template_text: password_reset.txt
+
+    # Templates for registration emails sent by the homeserver
+
+    registration_template_html: registration.html
+    registration_template_text: registration.txt
+
+    # Templates for validation emails sent by the homeserver when adding an email to
+    # your user account
+
+    add_threepid_template_html: add_threepid.html
+    add_threepid_template_text: add_threepid.txt
+
+    # Templates for password reset success and failure pages that a user
+    # will see after attempting to reset their password
+
+    password_reset_template_success_html: password_reset_success.html
+    password_reset_template_failure_html: password_reset_failure.html
+
+    # Templates for registration success and failure pages that a user
+    # will see after attempting to register using an email or phone
+
+    registration_template_success_html: registration_success.html
+    registration_template_failure_html: registration_failure.html
+
+    # Templates for success and failure pages that a user will see after attempting
+    # to add an email or phone to their account
+
+    add_threepid_success_html: add_threepid_success.html
+    add_threepid_failure_html: add_threepid_failure.html
 
 
 #password_providers:

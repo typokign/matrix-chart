@@ -1,0 +1,44 @@
+{{- if and .Values.mail.enabled .Values.mail.relay.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "matrix.fullname" . }}-exim-relay
+  labels:
+{{ include "matrix.labels" . | indent 4 }}
+spec:
+  replicas: {{ .Values.mail.relay.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "matrix.name" . }}-exim-relay
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "matrix.name" . }}-exim-relay
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      securityContext:
+        {{- toYaml .Values.mail.relay.podSecurityContext | nindent 8 }}
+      containers:
+        - name: "exim-relay"
+          image: "{{ .Values.mail.relay.image.repository }}:{{ .Values.mail.relay.image.tag }}"
+          imagePullPolicy: {{ .Values.mail.relay.image.pullPolicy }}
+          ports:
+            - name: smtp
+              containerPort: 8025
+              protocol: TCP
+          livenessProbe:
+            tcpSocket:
+              port: 8025
+          readinessProbe:
+            tcpSocket:
+              port: 8025
+          {{- with .Values.mail.relay.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+{{- end }}
