@@ -269,6 +269,9 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
+networkPolicies:
+  enabled: true
+
 ingress:
   enabled: true
   tls: []
