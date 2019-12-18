@@ -68,6 +68,7 @@ spec:
               drop:
                 - ALL
             readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
           {{- with .Values.riot.resources }}
           resources:
             {{- toYaml . | nindent 12 }}

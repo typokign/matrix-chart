@@ -90,6 +90,7 @@ spec:
               drop:
                 - ALL
             readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
           {{- with .Values.synapse.resources }}
           resources:
             {{- toYaml . | nindent 12 }}
