@@ -22,7 +22,6 @@ helm install matrix .
 
 ## TODO
 
-- Security hardening including NetworkPolicies
 - Coturn (VoIP calls) deployment
 - Various dockerized bridges and appservices
 - S3 storage for multimedia uploads via Goofys
