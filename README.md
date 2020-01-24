@@ -15,13 +15,8 @@ helm install matrix .
 - Latest version of Synapse
 - (Optional) Latest version of Riot Web
 - (Optional) Choice of lightweight Exim relay or external mail server for email notifications
-- Fully configurable via values.yaml
+- (Optional) Coturn TURN server for VoIP calls
 - (Optional) PostgreSQL cluster via stable/postgresql chart
+- Fully configurable via values.yaml
 - Ingress definition for Synapse and Riot
 - Load balanced federation port for federated homeservers
-
-## TODO
-
-- Coturn (VoIP calls) deployment
-- Various dockerized bridges and appservices
-- S3 storage for multimedia uploads via Goofys

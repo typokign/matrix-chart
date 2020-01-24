@@ -1,0 +1,62 @@
+{{- if .Values.coturn.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "matrix.fullname" . }}-coturn
+  labels:
+{{ include "matrix.labels" . | indent 4 }}
+spec:
+  replicas: {{ .Values.coturn.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "matrix.name" . }}-coturn
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      annotations:
+        # re-roll deployment on config change
+        checksum/coturn-config: {{ include (print $.Template.BasePath "/coturn/configmap.yaml") . | sha256sum }}
+      labels:
+        app.kubernetes.io/name: {{ include "matrix.name" . }}-coturn
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+      containers:
+        - name: "coturn"
+          image: "{{ .Values.coturn.image.repository }}:{{ .Values.coturn.image.tag }}"
+          imagePullPolicy: {{ .Values.coturn.image.pullPolicy }}
+          args: ["-c", "/turnserver.conf"]
+          ports:
+            - name: turn
+              containerPort: 3478
+              protocol: UDP
+          volumeMounts:
+            - name: coturn-config
+              mountPath: /turnserver.conf
+              subPath: turnserver.conf
+              readOnly: true
+            - name: var-tmp
+              mountPath: /var/tmp
+          securityContext:
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+          {{- with .Values.coturn.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+      volumes:
+        - name: coturn-config
+          configMap:
+            name: {{ include "matrix.fullname" . }}-coturn-config
+        - name: var-tmp
+          emptyDir: {}
+{{- end }}

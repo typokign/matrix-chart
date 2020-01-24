@@ -14,7 +14,7 @@ matrix:
   telemetry: false
 
   # URL where Synapse can be reached.
-  # This is *optional* if an Ingress is configured below. If baseUrl is unspecified, the first host of the
+  # This is *optional* if an Ingress is configured below. If baseUrl is unspecified, the Synapse hostname of the
   # Ingress will be used
   # baseUrl: "matrix.example.com"
 
@@ -229,6 +229,32 @@ riot:
   service:
     type: ClusterIP
     port: 80
+  replicaCount: 1
+  resources: {}
+
+# Settings for Coturn TURN relay, used for routing voice calls
+coturn:
+  # Set to false to disable Coturn
+  enabled: true
+
+  # Whether to allow guests to use the TURN server
+  allowGuests: true
+
+  # Shared secret for communication between Synapse and Coturn.
+  # Optional, will be auto-generated if not overridden here.
+  sharedSecret: ""
+
+  # UDP port range for TURN connections
+  ports:
+    from: 49152
+    to: 49172
+
+  image:
+    repository: "instrumentisto/coturn"
+    tag: "4.5.1.1"
+    pullPolicy: IfNotPresent
+  service:
+    type: NodePort
   replicaCount: 1
   resources: {}
 

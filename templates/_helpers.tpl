@@ -41,3 +41,14 @@ app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end -}}
+
+{{/*
+Synapse base URL, derived from either the Values.matrix.baseUrl override or the Ingress definition
+*/}}
+{{- define "matrix.baseUrl" -}}
+{{- if .Values.matrix.baseUrl }}
+{{- .Values.matrix.baseUrl -}}
+{{- else }}
+{{- .Values.ingress.hosts.synapse -}}
+{{- end }}
+{{- end }}

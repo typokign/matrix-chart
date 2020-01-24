@@ -23,11 +23,7 @@ pid_file: /data/homeserver.pid
 # use synapse with a reverse proxy, this should be the URL to reach
 # synapse via the proxy.
 #
-{{- if .Values.matrix.baseUrl }}
-public_baseurl: {{ .Values.matrix.baseUrl }}
-{{- else }}
-public_baseurl: {{ .Values.ingress.hosts.synapse }}
-{{- end }}
+public_baseurl: {{ include "matrix.baseUrl" . }}
 # Set the soft limit on the number of file descriptors synapse can use
 # Zero is used to indicate synapse should set the soft limit to the
 # hard limit.
@@ -36,7 +32,7 @@ public_baseurl: {{ .Values.ingress.hosts.synapse }}
 
 # Set to false to disable presence tracking on this homeserver.
 #
-use_presence: {{ .Values.matrix.enablePresence }}
+use_presence: {{ .Values.matrix.presence }}
 
 # Whether to require authentication to retrieve profile data (avatars,
 # display names) of other users through the client API. Defaults to
@@ -746,34 +742,30 @@ max_spider_size: {{ .Values.matrix.urlPreviews.rules.maxSize }}
 #recaptcha_siteverify_api: "https://www.recaptcha.net/recaptcha/api/siteverify"
 
 
+{{- if .Values.coturn.enabled }}
 ## TURN ##
 
 # The public URIs of the TURN server to give to clients
-#
-#turn_uris: []
+
+turn_uris:
+  - "turn:{{ include "matrix.baseUrl" . }}?transport=udp"
 
 # The shared secret used to compute passwords for the TURN server
-#
-#turn_shared_secret: "YOUR_SHARED_SECRET"
 
-# The Username and password if the TURN server needs them and
-# does not use a token
-#
-#turn_username: "TURNSERVER_USERNAME"
-#turn_password: "TURNSERVER_PASSWORD"
+turn_shared_secret: {{ include "matrix.coturn.sharedSecret" . }}
 
 # How long generated TURN credentials last
-#
-#turn_user_lifetime: 1h
+
+turn_user_lifetime: 1h
 
 # Whether guests should be allowed to use the TURN server.
 # This defaults to True, otherwise VoIP will be unreliable for guests.
 # However, it does introduce a slight security risk as it allows users to
 # connect to arbitrary endpoints without having first signed up for a
 # valid account (e.g. by passing a CAPTCHA).
-#
-#turn_allow_guests: true
 
+turn_allow_guests: {{ .Values.coturn.allowGuests }}
+{{- end }}
 
 ## Registration ##
 #
