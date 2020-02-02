@@ -73,9 +73,11 @@ spec:
               mountPath: /data/keys
             - name: media-store
               mountPath: /data/media_store
+            {{- if .Values.bridges.whatsapp.enabled }}
             - name: bridges
               mountPath: /bridges
               readOnly: true
+            {{- end }}
             - name: uploads
               mountPath: /data/uploads
             - name: tmp
@@ -108,9 +110,11 @@ spec:
         - name: media-store
           persistentVolumeClaim:
             claimName: {{ include "matrix.fullname" . }}-media-store
+        {{- if .Values.bridges.whatsapp.enabled }}
         - name: bridges
           persistentVolumeClaim:
             claimName: {{ include "matrix.fullname" . }}-bridges
+        {{- end }}
         # Ephemeral in-progress uploads
         - name: uploads
           emptyDir: {}
