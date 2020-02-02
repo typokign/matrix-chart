@@ -1,4 +1,5 @@
 {{- if .Values.coturn.enabled }}
+{{- $portRange := untilStep (int .Values.coturn.ports.from) (int (add1 .Values.coturn.ports.to)) 1 -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -33,9 +34,14 @@ spec:
           imagePullPolicy: {{ .Values.coturn.image.pullPolicy }}
           args: ["-c", "/turnserver.conf"]
           ports:
-            - name: turn
+            - name: turn-3478
               containerPort: 3478
               protocol: UDP
+          {{- range $portRange }}
+            - name: turn-{{ . }}
+              containerPort: {{ . }}
+              protocol: UDP
+          {{- end }}
           volumeMounts:
             - name: coturn-config
               mountPath: /turnserver.conf

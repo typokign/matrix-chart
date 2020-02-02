@@ -9,6 +9,11 @@ metadata:
 spec:
   type: {{ .Values.coturn.service.type }}
   ports:
+    - port: 3478
+      targetPort: turn-3478
+      nodePort: 3478
+      protocol: UDP
+      name: turn-3478
     {{- range $portRange }}
     - port: {{ . }}
       targetPort: {{ . }}
