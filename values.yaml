@@ -287,6 +287,91 @@ mail:
     password: ""
     requireTransportSecurity: true
 
+bridges:
+  whatsapp:
+    # Set to true to enable the WhatsApp bridge
+    enabled: false
+
+    # Username and display name of the WhatsApp bridge bot
+    bot:
+      username: "whatsappbot"
+      displayName: "WhatsApp bridge bot"
+      avatar: "mxc://maunium.net/NeXNQarUbrlYBiPCpprYsRqr"
+
+    # Permissions for using the bridge.
+    # Permitted values:
+    # relaybot - Talk through the relaybot (if enabled), no access otherwise
+    #     user - Access to use the bridge to chat with a WhatsApp account.
+    #    admin - User level and some additional administration tools
+    # Permitted keys:
+    #        * - All Matrix users
+    #   domain - All users on that homeserver
+    #     mxid - Specific user
+    permissions:
+      "*": relaybot
+
+    # WhatsApp server connection settings
+    connection:
+      # WhatsApp server connection timeout (seconds)
+      timeout: 20
+      # Number of QR codes to store, essentially multiplying the connection timeout
+      qrRegenCount: 2
+      # Maximum number of connection attempts before failing
+      maxAttempts: 3
+      # Retry delay
+      # Negative numbers are exponential backoff: -connection_retry_delay + 1 + 2^attempts
+      retryDelay: -1
+      # Whether or not to notify the user when attempting to reconnect. Set to false to only report when maxAttempts has been reached
+      reportRetry: true
+
+    # Send notifications for incoming calls
+    callNotices: true
+
+    users:
+      # Username for WhatsApp users
+      # Evaluated as a template where {{ . }} is replaced with the phone number of the WhatsApp user
+      username: "whatsapp_{{.}}"
+
+      # Display name for WhatsApp users
+      # Evaluated as a template, with variables:
+      # {{.Notify}} - nickname set by the WhatsApp user
+      # {{.Jid}}    - phone number (international format)
+      # The following variables are also available, but will cause problems on multi-user instances:
+      # {{.Name}}   - display name from contact list
+      # {{.Short}}  - short display name from contact list
+      displayName: "{{if .Notify}}{{.Notify}}{{else}}{{.Jid}}{{end}} (WA)"
+
+    # Display name for communities.
+    # A community will be automatically generated for each user using the bridge, and can be used to group WhatsApp chats together
+    # Evaluated as a template, with variables:
+    # {{.Localpart}} - MXID localpart
+    # {{.Server}}    - MXID server part of the user.
+    communityName: "whatsapp_{{.Localpart}}={{.Server}}"
+
+    relaybot:
+      # Set to true to enable the relaybot and management room
+      enabled: false
+
+      # Management room for the relay bot where status notifications are posted
+      management: "#foo:example.com"
+
+      # Users to invite to the management room automatically
+      invites: []
+
+    data:
+      # Size of the PVC to allocate for the SQLite database
+      capacity: 512Mi
+
+    image:
+      repository: "dock.mau.dev/tulir/mautrix-whatsapp"
+      tag: "latest"
+      pullPolicy: Always
+    replicaCount: 1
+    resources: {}
+    service:
+      type: ClusterIP
+      port: 29318
+
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""

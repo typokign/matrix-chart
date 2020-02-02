@@ -1001,7 +1001,10 @@ report_stats: {{ .Values.matrix.telemetry }}
 
 # A list of application service config files to use
 #
-#app_service_config_files:
+{{- if .Values.bridges.whatsapp.enabled }}
+app_service_config_files:
+  - "/bridges/whatsapp.yaml"
+{{- end }}
 #  - app_service_1.yaml
 #  - app_service_2.yaml
 

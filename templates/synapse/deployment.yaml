@@ -73,6 +73,9 @@ spec:
               mountPath: /data/keys
             - name: media-store
               mountPath: /data/media_store
+            - name: bridges
+              mountPath: /bridges
+              readOnly: true
             - name: uploads
               mountPath: /data/uploads
             - name: tmp
@@ -105,6 +108,9 @@ spec:
         - name: media-store
           persistentVolumeClaim:
             claimName: {{ include "matrix.fullname" . }}-media-store
+        - name: bridges
+          persistentVolumeClaim:
+            claimName: {{ include "matrix.fullname" . }}-bridges
         # Ephemeral in-progress uploads
         - name: uploads
           emptyDir: {}

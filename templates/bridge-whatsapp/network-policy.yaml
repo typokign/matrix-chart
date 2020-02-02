@@ -1,22 +1,22 @@
-{{- if .Values.networkPolicies.enabled }}
+{{- if and .Values.networkPolicies.enabled .Values.bridges.whatsapp.enabled }}
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: {{ include "matrix.fullname" . }}-synapse
+  name: {{ include "matrix.fullname" . }}-bridge-whatsapp
   labels:
 {{ include "matrix.labels" . | indent 4 }}
 spec:
   podSelector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "matrix.fullname" . }}-synapse
+      app.kubernetes.io/name: {{ include "matrix.fullname" . }}-bridge-whatsapp
       app.kubernetes.io/instance: {{ .Release.Name }}
   ingress:
     - from:
         - podSelector:
             matchLabels:
-              matrix-chart/allow-synapse-access: allow
+              app.kubernetes.io/name: {{ include "matrix.name" . }}-synapse
               app.kubernetes.io/instance: {{ .Release.Name }}
       ports:
-        - port: http
+        - port: bridge
           protocol: TCP
 {{- end }}
