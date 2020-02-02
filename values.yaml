@@ -158,6 +158,10 @@ synapse:
   service:
     type: ClusterIP
     port: 80
+    federation:
+      type: NodePort
+      # Warning! By spec, federation must be available at <synapse url>:8448. Only change this if Synapse is running behind another proxy
+      port: 8448
   replicaCount: 1
   resources: {}
 

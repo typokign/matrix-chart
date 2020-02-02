@@ -6,9 +6,9 @@ metadata:
   labels:
 {{ include "matrix.labels" . | indent 4 }}
 spec:
-  type: LoadBalancer
+  type: {{ .Values.synapse.service.federation.type }}
   ports:
-    - port: 8448
+    - port: {{ .Values.synapse.service.federation.port }}
       targetPort: http
       protocol: TCP
   selector:
