@@ -41,6 +41,7 @@ spec:
               mountPath: /data
             - name: config
               mountPath: /load
+              readOnly: true
           securityContext:
             capabilities:
               drop:

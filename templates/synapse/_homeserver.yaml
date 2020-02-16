@@ -1001,12 +1001,15 @@ report_stats: {{ .Values.matrix.telemetry }}
 
 # A list of application service config files to use
 #
-{{- if .Values.bridges.whatsapp.enabled }}
+{{- if or .Values.bridges.whatsapp.enabled .Values.bridges.discord.enabled }}
 app_service_config_files:
+{{- end }}
+{{- if .Values.bridges.whatsapp.enabled }}
   - "/bridges/whatsapp.yaml"
 {{- end }}
-#  - app_service_1.yaml
-#  - app_service_2.yaml
+{{- if .Values.bridges.discord.enabled }}
+  - "/bridges/discord.yaml"
+{{- end }}
 
 # Uncomment to enable tracking of application service IP addresses. Implicitly
 # enables MAU tracking for application service users.
