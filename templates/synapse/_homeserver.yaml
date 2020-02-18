@@ -1249,7 +1249,7 @@ password_config:
 email:
     enable_notifs: {{ .Values.mail.enabled }}
     notif_from: {{ .Values.mail.from }}
-    {{- if .Values.mail.relay }}
+    {{- if .Values.mail.relay.enabled }}
     smtp_host: {{ include "matrix.fullname" . }}-exim-relay
     smtp_port: {{ .Values.mail.relay.service.port }}
     {{- else }}
