@@ -479,9 +479,9 @@ database:
     name: "psycopg2"
     # Arguments to pass to the engine
     args:
-        user: "{{ .Values.postgresql.postgresqlUsername }}"
-        password: "{{ .Values.postgresql.postgresqlPassword }}"
-        database: "{{ .Values.postgresql.postgresqlDatabase }}"
+        user: "{{ .Values.postgresql.username }}"
+        password: "{{ .Values.postgresql.password }}"
+        database: "{{ .Values.postgresql.database }}"
         {{- if .Values.postgresql.enabled }}
         host: "{{ include "matrix.fullname" . }}-postgresql"
         {{- else }}

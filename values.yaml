@@ -134,15 +134,20 @@ postgresql:
   # Whether to deploy the stable/postgresql chart with this chart. If disabled, make sure PostgreSQL is available at the hostname below and credentials are configured below
   enabled: true
 
-  postgresqlUsername: matrix
-  postgresqlPassword: matrix
-  postgresqlDatabase: matrix
+  username: matrix
+  password: matrix
+  database: matrix
 
   # Set this if postgresql.enabled = false
   hostname: ""
 
+  # Storage to allocate for stable/postgresql
   persistence:
     size: 8Gi
+
+  # If postgresql.enabled, stable/postgresql will run the scripts in templates/postgresql/initdb.yaml
+  # If using an external Postgres server, make sure to configure the database as specified at https://github.com/matrix-org/synapse/blob/master/docs/postgres.md
+  initdbScriptsConfigMap: "{{ .Release.Name }}-postgresql-initdb"
 
   securityContext:
     enabled: true

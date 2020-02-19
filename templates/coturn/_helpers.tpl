@@ -9,4 +9,3 @@ Shared secret for the Coturn server
 {{- randAlphaNum 64 -}}
 {{- end }}
 {{- end -}}
-
