@@ -128,6 +128,14 @@ volumes:
   media:
     # Capacity of the media persistent volume claim
     capacity: 10Gi
+    # Storage class (optional)
+    storageClass: ""
+  signingKey:
+    # Capacity of the signing key PVC
+    # Note: 1Mi is more than enough, but some cloud providers set a minimum PVC size of 1Mi or 1Gi, adjust as necessary
+    capacity: 1Mi
+    # Storage class (optional)
+    storageClass: ""
 
 # PostgreSQL Database Configuration
 postgresql:
@@ -370,6 +378,8 @@ bridges:
     data:
       # Size of the PVC to allocate for the SQLite database
       capacity: 512Mi
+      # Storage class (optional)
+      storageClass: ""
 
     image:
       repository: "dock.mau.dev/tulir/mautrix-whatsapp"
@@ -434,6 +444,8 @@ bridges:
     data:
       # Size of the PVC to allocate for the SQLite database
       capacity: 512Mi
+      # Storage class (optional)
+      storageClass: ""
 
     image:
       repository: "halfshot/matrix-appservice-discord"
