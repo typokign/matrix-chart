@@ -49,6 +49,6 @@ Synapse base URL, derived from either the Values.matrix.baseUrl override or the 
 {{- if .Values.matrix.baseUrl }}
 {{- .Values.matrix.baseUrl -}}
 {{- else }}
-{{- .Values.ingress.hosts.synapse -}}
+https://{{- .Values.ingress.hosts.synapse -}}
 {{- end }}
 {{- end }}
