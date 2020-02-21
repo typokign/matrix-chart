@@ -43,12 +43,23 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end -}}
 
 {{/*
-Synapse base URL, derived from either the Values.matrix.baseUrl override or the Ingress definition
+Synapse hostname, derived from either the Values.matrix.hostname override or the Ingress definition
+*/}}
+{{- define "matrix.hostname" -}}
+{{- if .Values.matrix.hostname }}
+{{- .Values.matrix.hostname -}}
+{{- else }}
+{{- .Values.ingress.hosts.synapse -}}
+{{- end }}
+{{- end }}
+
+{{/*
+Synapse hostname prepended with https:// to form a complete URL
 */}}
 {{- define "matrix.baseUrl" -}}
-{{- if .Values.matrix.baseUrl }}
-{{- .Values.matrix.baseUrl -}}
+{{- if .Values.matrix.hostname }}
+{{- printf "https://%s" .Values.matrix.hostname -}}
 {{- else }}
-https://{{- .Values.ingress.hosts.synapse -}}
+{{- printf "https://%s" .Values.ingress.hosts.synapse -}}
 {{- end }}
 {{- end }}

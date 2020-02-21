@@ -9,10 +9,10 @@ matrix:
   # Enable anonymous telemetry to matrix.org
   telemetry: false
 
-  # URL where Synapse can be reached.
-  # This is *optional* if an Ingress is configured below. If baseUrl is unspecified, the Synapse hostname of the
+  # Hostname where Synapse can be reached.
+  # This is *optional* if an Ingress is configured below. If hostname is unspecified, the Synapse hostname of the
   # Ingress will be used
-  # baseUrl: "matrix.example.com"
+  # hostname: "matrix.example.com"
 
   # Set to false to disable presence (online/offline indicators)
   presence: true

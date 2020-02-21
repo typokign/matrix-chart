@@ -748,7 +748,7 @@ max_spider_size: {{ .Values.matrix.urlPreviews.rules.maxSize }}
 # The public URIs of the TURN server to give to clients
 
 turn_uris:
-  - "turn:{{ include "matrix.baseUrl" . }}?transport=udp"
+  - "turn:{{ include "matrix.hostname" . }}?transport=udp"
 
 # The shared secret used to compute passwords for the TURN server
 
