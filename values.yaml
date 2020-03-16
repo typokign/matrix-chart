@@ -250,6 +250,15 @@ coturn:
   # Set to false to disable Coturn
   enabled: true
 
+  # How to deploy Coturn
+  # Options:
+  #   DaemonSet:  A DaemonSet will be used to schedule one Coturn pod per node. Each Coturn pod will open the ports it needs directly on the host it is scheduled on.
+  #               This maximizes compatibility and will allow you to set up Coturn without any additional cluster configuration.
+  #   Deployment: A Deployment will be used to schedule Coturn pods. The number of Coturn pods will be configurable (via the replicaCount setting below).
+  #               You will need to use a NodePort service or an external load balancer to route traffic to the Coturn pods.
+  #               This is more flexible and can use fewer pods in a multi-node setup, but will require additional networking configuration.
+  kind: DaemonSet
+
   # Whether to allow guests to use the TURN server
   allowGuests: true
 
@@ -262,12 +271,20 @@ coturn:
     from: 49152
     to: 49172
 
+  service:
+    # The type of service to deploy for routing Coturn traffic
+    # Options:
+    #   ClusterIP: Recommended for DaemonSet configurations. This will create a standard Kubernetes service for Coturn within the cluster. No external networking
+    #              will be configured as the DaemonSet will handle binding to each Node's host networking
+    #   NodePort:  Recommended for Deployment configurations. This will open TURN ports on every node and route traffic on these ports to the Coturn pods.
+    #              You will need to make sure your cloud provider supports the cluster config setting "apiserver.service-node-port-range", as this range must contain
+    #              the ports defined above for the service to be created.
+    type: ClusterIP
+
   image:
     repository: "instrumentisto/coturn"
     tag: "4.5.1.1"
     pullPolicy: IfNotPresent
-  service:
-    type: NodePort
   replicaCount: 1
   resources: {}
 

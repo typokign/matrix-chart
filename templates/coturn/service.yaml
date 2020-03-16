@@ -11,7 +11,9 @@ spec:
   ports:
     - port: 3478
       targetPort: turn-3478
+      {{- if eq .Values.coturn.service.type "NodePort" }}
       nodePort: 3478
+      {{- end }}
       protocol: UDP
       name: turn-3478
     {{- range $portRange }}
