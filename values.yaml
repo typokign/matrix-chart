@@ -456,6 +456,20 @@ bridges:
     service:
       type: ClusterIP
       port: 9005
+  # Recommended to leave this disabled to allow bridges to be scheduled on separate nodes.
+  # Set this to true to reduce latency between the homeserver and bridges, or if your cloud provider does not allow
+  # the ReadWriteMany access mode (see below)
+  affinity: false
+  volume:
+    # Capacity of the shared volume for storing bridge/appservice registration files
+    # Note: 1Mi should be enough but some cloud providers may set a minimum PVC size of 1Gi, adjust as necessary
+    capacity: 1Mi
+    # Storage class (optional)
+    storageClass: ""
+    # Access mode of the shared volume. ReadWriteMany is recommended to allow bridges to be scheduled on separate nodes.
+    # Some cloud providers may not allow the ReadWriteMany access mode. In that case, change this to ReadWriteOnce -AND-
+    # set bridges.affinity (above) to true
+    accessMode: ReadWriteMany
 
 imagePullSecrets: []
 nameOverride: ""

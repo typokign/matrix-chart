@@ -6,9 +6,10 @@ metadata:
   labels:
 {{ include "matrix.labels" . | indent 4}}
 spec:
+  storageClassName: {{ .Values.bridges.volume.storageClass }}
   accessModes:
-    - ReadWriteMany
+    - {{ .Values.bridges.volume.accessMode }}
   resources:
     requests:
-      storage: 1Mi
+      storage: {{ .Values.bridges.volume.capacity }}
 {{- end }}
