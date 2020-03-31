@@ -1,1 +1,46 @@
-TODO
+{{- if .Release.IsInstall }}
+dacruz21/matrix-chart has been installed!
+
+Installed components:
+ - Synapse ({{ .Values.synapse.image.repository }})
+{{- if .Values.riot.enabled }}
+ - Riot Web ({{ .Values.riot.image.repository }})
+{{- end }}
+{{- if .Values.postgresql.enabled }}
+ - PostgreSQL ({{ .Values.postgresql.image.repository }})
+{{- end }}
+{{- if .Values.coturn.enabled }}
+ - Coturn ({{ .Values.coturn.image.repository }})
+{{- end }}
+{{- if .Values.mail.relay.enabled }}
+ - Exim Relay ({{ .Values.mail.relay.image.repository }})
+{{- end }}
+{{- if .Values.bridges.whatsapp.enabled }}
+ - WhatsApp Bridge ({{ .Values.bridges.whatsapp.image.repository }})
+{{- end }}
+{{- if .Values.bridges.discord.enabled }}
+ - Discord Bridge ({{ .Values.bridges.discord.image.repository }})
+{{- end }}
+
+Thank you for installing dacruz21/matrix-chart! If you have any questions or run into any issues, please file a GitHub issue or join us at #matrix-chart:typokign.com.
+
+{{ if .Values.ingress.enabled }}
+Your Synapse homeserver should soon be available at https://{{ .Values.ingress.hosts.synapse }}
+{{- if .Values.riot.enabled }}
+Your Riot Web instance should soon be available at https://{{ .Values.ingress.hosts.riot }}
+{{- end }}
+{{- end }}
+
+{{ if .Values.bridges.whatsapp.enabled }}
+The WhatsApp bridge has been enabled!
+
+To get started, start a chat with the bridge bot (@{{ .Values.bridges.whatsapp.bot.username }}:{{ .Values.matrix.serverName }}).
+For more information, check out the official documentation at https://github.com/tulir/mautrix-whatsapp/wiki/Authentication
+{{- end }}
+
+{{ if .Values.bridges.discord.enabled }}
+The Discord bridge has been enabled!
+
+You'll need to follow the instructions at https://github.com/Half-Shot/matrix-appservice-discord#setting-up-discord to finish setting up the bridge
+{{- end }}
+{{- end }}
