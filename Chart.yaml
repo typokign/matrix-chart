@@ -1,6 +1,6 @@
 apiVersion: v2
 name: matrix
-description: A Helm chart for Kubernetes
+description: A Helm chart to deploy a Matrix homeserver stack into Kubernetes
 
 # A chart can be either an 'application' or a 'library' chart.
 #
@@ -14,7 +14,7 @@ type: application
 
 # This is the chart version. This version number should be incremented each time you make changes
 # to the chart and its templates, including the app version.
-version: 1.0.1
+version: 1.0.2
 
 # This is the version number of the application being deployed. This version number should be
 # incremented each time you make changes to the application.
