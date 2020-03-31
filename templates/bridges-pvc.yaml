@@ -6,7 +6,9 @@ metadata:
   labels:
 {{ include "matrix.labels" . | indent 4}}
 spec:
+  {{- if .Values.bridges.volume.storageClass }}
   storageClassName: {{ .Values.bridges.volume.storageClass }}
+  {{- end }}
   accessModes:
     - {{ .Values.bridges.volume.accessMode }}
   resources:

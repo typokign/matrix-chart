@@ -6,7 +6,9 @@ metadata:
   labels:
 {{ include "matrix.labels" . | indent 4}}
 spec:
+  {{- if .Values.bridges.whatsapp.data.storageClass }}
   storageClassName: {{ .Values.bridges.whatsapp.data.storageClass }}
+  {{- end }}
   accessModes:
     - ReadWriteOnce
   resources:

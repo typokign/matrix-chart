@@ -5,7 +5,9 @@ metadata:
   labels:
 {{ include "matrix.labels" . | indent 4}}
 spec:
+  {{- if .Values.volumes.signingKey.storageClass }}
   storageClassName: {{ .Values.volumes.signingKey.storageClass }}
+  {{- end }}
   accessModes:
     - ReadWriteOnce
   resources:
