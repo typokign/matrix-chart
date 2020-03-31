@@ -17,7 +17,7 @@ A Helm chart for deploying a Matrix homeserver stack in Kubernetes.
 
 ## Installation
 
-Some documentation is available in values.yaml, and a complete installation guide is coming soon.
+Some documentation is available in values.yaml, and a complete configuration guide is coming soon.
 
 Choose one of the two options below to install the chart.
 
