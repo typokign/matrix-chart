@@ -37,7 +37,7 @@ This chart is published to my Helm chart repository at https://dacruz21.github.i
     ```yaml
     dependencies:
       - name: matrix
-        version: 1.0.2
+        version: 1.0.3
         repository: https://dacruz21.github.io/helm-charts
     ```
 
@@ -61,7 +61,7 @@ helm install matrix .
 ## Security
 Helm currently [does not officially support chart signatures created by GPG keys stored on smartcards](https://github.com/helm/helm/issues/2843#issuecomment-379532906). This may change in the future, in which case I will start packaging this chart with the standard `.prov` signatures, but until then signatures must be verified manually.
 
-GPG signatures are available within the chart repo and can be found by appending `.gpg` to the end of the package URL. For example, the signature for v1.0.2 is available at https://dacruz21.github.io/helm-charts/matrix-1.0.2.tgz.gpg.
+GPG signatures are available within the chart repo and can be found by appending `.gpg` to the end of the package URL. For example, the signature for v1.0.3 is available at https://dacruz21.github.io/helm-charts/matrix-1.0.3.tgz.gpg.
 
 These GPG signatures are signed with the same PGP key that is used to sign commits in this Git repository. The key is available by searching for david@typokign.com on a public keyserver, or by downloading it from my website at https://typokign.com/key.gpg.
 
