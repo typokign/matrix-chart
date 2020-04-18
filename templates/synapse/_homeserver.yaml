@@ -482,11 +482,14 @@ database:
         user: "{{ .Values.postgresql.username }}"
         password: "{{ .Values.postgresql.password }}"
         database: "{{ .Values.postgresql.database }}"
+        
         {{- if .Values.postgresql.enabled }}
         host: "{{ include "matrix.fullname" . }}-postgresql"
+        port: "5432"
         {{- else }}
         host: "{{ .Values.postgresql.hostname }}"
-        {{- end}}
+        port: "{{ .Values.postgresql.port }}"
+        {{- end }}
         cp_min: 5
         cp_max: 10
 

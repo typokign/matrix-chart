@@ -148,6 +148,7 @@ postgresql:
 
   # Set this if postgresql.enabled = false
   hostname: ""
+  port: 5432
 
   # Storage to allocate for stable/postgresql
   persistence:
