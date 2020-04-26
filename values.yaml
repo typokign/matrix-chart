@@ -154,7 +154,7 @@ postgresql:
   persistence:
     size: 8Gi
 
-  # If postgresql.enabled, stable/postgresql will run the scripts in templates/postgresql/initdb.yaml
+  # If postgresql.enabled, stable/postgresql will run the scripts in templates/postgresql/initdb-configmap.yaml
   # If using an external Postgres server, make sure to configure the database as specified at https://github.com/matrix-org/synapse/blob/master/docs/postgres.md
   initdbScriptsConfigMap: "{{ .Release.Name }}-postgresql-initdb"
 
@@ -323,6 +323,38 @@ mail:
     requireTransportSecurity: true
 
 bridges:
+  irc:
+    # Set to true to enable the IRC bridge
+    enabled: false
+    # Whether to enable presence (online/offline indicators). If presence is disabled for the homeserver (above), it should be disabled here too
+    presence: false
+    # Name of Postgres database to store IRC bridge data in, this database will be created if the included Postgres chart is enabled, otherwise you must create it manually
+    database: "matrix_irc"
+
+    # Object of IRC servers to connect to, see https://github.com/matrix-org/matrix-appservice-irc/blob/master/config.sample.yaml for config options
+    servers:
+      chat.freenode.net:
+        # A human-readable short name.
+        name: "Freenode"
+        # The port to connect to. Optional.
+        port: 6697
+        # Whether to use SSL or not. Default: false.
+        ssl: true
+
+    data:
+      # Size of the data PVC to allocate
+      capacity: 1Mi
+
+    image:
+      repository: "matrixdotorg/matrix-appservice-irc"
+      tag: "release-0.16.0"
+      pullPolicy: IfNotPresent
+    replicaCount: 1
+    resources: {}
+    service:
+      type: ClusterIP
+      port: 9006
+
   whatsapp:
     # Set to true to enable the WhatsApp bridge
     enabled: false

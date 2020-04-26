@@ -1,4 +1,4 @@
-{{- if or .Values.bridges.whatsapp.enabled .Values.bridges.discord.enabled }}
+{{- if or .Values.bridges.whatsapp.enabled .Values.bridges.discord.enabled .Values.bridges.irc.enabled }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
