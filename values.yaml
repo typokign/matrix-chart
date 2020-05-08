@@ -222,8 +222,9 @@ riot:
     - feature_many_integration_managers
     - feature_mjolnir
     - feature_dm_verification
-    - feature_cross_signing
-    - feature_event_indexing
+    - feature_bridge_state
+    - feature_presence_in_room_list
+    - feature_custom_themes
 
   # Servers to show in the Explore menu (the current server is always shown)
   roomDirectoryServers:
@@ -238,7 +239,7 @@ riot:
   # Riot Kubernetes resource settings
   image:
     repository: "vectorim/riot-web"
-    tag: v1.5.15
+    tag: v1.6.0
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
