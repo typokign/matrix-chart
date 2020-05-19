@@ -167,7 +167,7 @@ postgresql:
 synapse:
   image:
     repository: "matrixdotorg/synapse"
-    tag: v1.12.4
+    tag: v1.13.0
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
@@ -239,7 +239,7 @@ riot:
   # Riot Kubernetes resource settings
   image:
     repository: "vectorim/riot-web"
-    tag: v1.6.0
+    tag: v1.6.1
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
