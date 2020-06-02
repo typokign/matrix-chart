@@ -868,7 +868,9 @@ registrations_require_3pid:
 # If set, allows registration of standard or admin accounts by anyone who
 # has the shared secret, even if registration is otherwise disabled.
 #
-# registration_shared_secret: <PRIVATE STRING>
+{{- if .Values.matrix.registration.sharedSecret }}
+registration_shared_secret: {{ .Values.matrix.registration.sharedSecret }}
+{{- end }}
 
 # Set the number of bcrypt rounds used to generate password hash.
 # Larger numbers increase the work factor needed to generate the hash.
@@ -1027,7 +1029,10 @@ app_service_config_files:
 # the registration_shared_secret is used, if one is given; otherwise,
 # a secret key is derived from the signing key.
 #
-# macaroon_secret_key: <PRIVATE STRING>
+{{- if .Values.matrix.security.macaroonSecretKey }}
+macaroon_secret_key: {{ .Values.matrix.security.macaroonSecretKey }}
+{{- end }}
+
 
 # a secret which is used to calculate HMACs for form values, to stop
 # falsification of values. Must be specified for the User Consent
@@ -1097,11 +1102,27 @@ signing_key_path: "/data/keys/{{ .Values.matrix.serverName }}.signing.key"
 #      "ed25519:auto": "abcdefghijklmnopqrstuvwxyzabcdefghijklmopqr"
 #  - server_name: "my_other_trusted_server.example.com"
 #
+{{- if .Values.matrix.security.trustedKeyServers }}
+trusted_key_servers:
+    {{- range .Values.matrix.security.trustedKeyServers }}
+    - server_name: {{ .serverName }}
+      {{- if .verifyKeys }}
+      verify_keys:
+        {{- range .verifyKeys }}
+          {{ .id | quote }}: {{ .key | quote }}
+        {{- end }}
+      {{- end }}
+      {{- if .acceptKeysInsecurely }}
+      accept_keys_insecurely: {{ .acceptKeysInsecurely }}
+      {{- end }}
+    {{- end }}
+{{- end }}
 
 # Uncomment the following to disable the warning that is emitted when the
 # trusted_key_servers include 'matrix.org'. See above.
 #
-#suppress_key_server_warning: true
+suppress_key_server_warning: {{ .Values.matrix.security.supressKeyServerWarning }}
+
 
 # The signing keys to use when acting as a trusted key server. If not specified
 # defaults to the server signing key.
