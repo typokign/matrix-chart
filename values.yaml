@@ -127,59 +127,59 @@ matrix:
         #  # blacklist any URL with a literal IPv4 address
         #  - netloc: '^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$'
 
-      security:
-        # a secret which is used to sign access tokens. If none is specified,
-        # the registration_shared_secret is used, if one is given; otherwise,
-        # a secret key is derived from the signing key.
-        #
-        # macaroonSecretKey: <PRIVATE STRING>
+  security:
+    # a secret which is used to sign access tokens. If none is specified,
+    # the registration_shared_secret is used, if one is given; otherwise,
+    # a secret key is derived from the signing key.
+    #
+    # macaroonSecretKey: <PRIVATE STRING>
 
-        # This disables the warning that is emitted when the
-        # trustedKeyServers include 'matrix.org'. See below.
-        # Set to false to re-enable the warning.
-        #
-        surpressKeyServerWarning: true
+    # This disables the warning that is emitted when the
+    # trustedKeyServers include 'matrix.org'. See below.
+    # Set to false to re-enable the warning.
+    #
+    surpressKeyServerWarning: true
 
-        # The trusted servers to download signing keys from.
-        #
-        # When we need to fetch a signing key, each server is tried in parallel.
-        #
-        # Normally, the connection to the key server is validated via TLS certificates.
-        # Additional security can be provided by configuring a `verify key`, which
-        # will make synapse check that the response is signed by that key.
-        #
-        # This setting supercedes an older setting named `perspectives`. The old format
-        # is still supported for backwards-compatibility, but it is deprecated.
-        #
-        # 'trustedKeyServers' defaults to matrix.org, but using it will generate a
-        # warning on start-up. To suppress this warning, set
-        # 'surpressKeyServerWarning' to true.
-        #
-        # Options for each entry in the list include:
-        #
-        #    serverName: the name of the server. required.
-        #
-        #    verifyKeys: an optional map from key id to base64-encoded public key.
-        #       If specified, we will check that the response is signed by at least
-        #       one of the given keys.
-        #
-        #    acceptKeysInsecurely: a boolean. Normally, if `verify_keys` is unset,
-        #       and federation_verify_certificates is not `true`, synapse will refuse
-        #       to start, because this would allow anyone who can spoof DNS responses
-        #       to masquerade as the trusted key server. If you know what you are doing
-        #       and are sure that your network environment provides a secure connection
-        #       to the key server, you can set this to `true` to override this
-        #       behaviour.
-        #
-        # An example configuration might look like:
-        #
-        # trustedKeyServers:
-        #   - serverName: my_trusted_server.example.com
-        #     verifyKeys:
-        #       - id: "ed25519:auto"
-        #         key: "abcdefghijklmnopqrstuvwxyzabcdefghijklmopqr"
-        #     acceptKeysInsecurely: false
-        #   - serverName: my_other_trusted_server.example.com
+    # The trusted servers to download signing keys from.
+    #
+    # When we need to fetch a signing key, each server is tried in parallel.
+    #
+    # Normally, the connection to the key server is validated via TLS certificates.
+    # Additional security can be provided by configuring a `verify key`, which
+    # will make synapse check that the response is signed by that key.
+    #
+    # This setting supercedes an older setting named `perspectives`. The old format
+    # is still supported for backwards-compatibility, but it is deprecated.
+    #
+    # 'trustedKeyServers' defaults to matrix.org, but using it will generate a
+    # warning on start-up. To suppress this warning, set
+    # 'surpressKeyServerWarning' to true.
+    #
+    # Options for each entry in the list include:
+    #
+    #    serverName: the name of the server. required.
+    #
+    #    verifyKeys: an optional map from key id to base64-encoded public key.
+    #       If specified, we will check that the response is signed by at least
+    #       one of the given keys.
+    #
+    #    acceptKeysInsecurely: a boolean. Normally, if `verify_keys` is unset,
+    #       and federation_verify_certificates is not `true`, synapse will refuse
+    #       to start, because this would allow anyone who can spoof DNS responses
+    #       to masquerade as the trusted key server. If you know what you are doing
+    #       and are sure that your network environment provides a secure connection
+    #       to the key server, you can set this to `true` to override this
+    #       behaviour.
+    #
+    # An example configuration might look like:
+    #
+    # trustedKeyServers:
+    #   - serverName: my_trusted_server.example.com
+    #     verifyKeys:
+    #       - id: "ed25519:auto"
+    #         key: "abcdefghijklmnopqrstuvwxyzabcdefghijklmopqr"
+    #     acceptKeysInsecurely: false
+    #   - serverName: my_other_trusted_server.example.com
 
 # Persistent volumes configuration
 volumes:
