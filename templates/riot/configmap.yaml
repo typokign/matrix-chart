@@ -7,7 +7,11 @@ metadata:
 data:
   config.json: |
     {
-      "default_server_name": {{ .Values.matrix.hostname | quote }},
+      "default_server_config": {
+        "m.homeserver": {
+          "base_url": {{ include "matrix.baseUrl" . | quote }}
+        }
+      },
       "brand": {{ .Values.riot.branding.brand | quote }},
       "branding": {
         {{- if .Values.riot.branding.welcomeBackgroundUrl }}
