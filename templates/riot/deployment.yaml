@@ -37,7 +37,7 @@ spec:
               containerPort: 8080
               protocol: TCP
           volumeMounts:
-            - mountPath: /etc/riot-web/config.json
+            - mountPath: /app/config.json
               name: riot-config
               subPath: config.json
               readOnly: true
