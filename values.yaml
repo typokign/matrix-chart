@@ -181,6 +181,16 @@ matrix:
     #     acceptKeysInsecurely: false
     #   - serverName: my_other_trusted_server.example.com
 
+  logging:
+    # Root log level is the default log level for log outputs that do not have more
+    # specific settings.
+    rootLogLevel: WARNING
+    # beware: increasing this to DEBUG will make synapse log sensitive
+    # information such as access tokens.
+    sqlLogLevel: WARNING
+    # The log level for the synapse server
+    synapseLogLevel: WARNING
+
 # Persistent volumes configuration
 volumes:
   # Uploaded attachments/multimedia
