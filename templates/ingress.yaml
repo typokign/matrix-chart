@@ -41,4 +41,13 @@ spec:
               serviceName: "{{ include "matrix.fullname" . }}-riot"
               servicePort: {{ .Values.riot.service.port }}
     {{- end }}
+    {{- if .Values.matrix.federation.enableIngress }}
+    - host: {{ .Values.ingress.hosts.federation }}
+      http:
+        paths:
+          - path: "/"
+            backend:
+              serviceName: "{{ include "matrix.fullname" . }}-synapse-federation"
+              servicePort: {{ .Values.synapse.service.federation.port }}
+    {{- end }}
 {{- end }}

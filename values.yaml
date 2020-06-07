@@ -37,8 +37,9 @@ matrix:
   # Settings related to federation
   federation:
     # Set to false to disable federation and run an isolated homeserver
-    # This also deploys a LoadBalancer Service for the federation port (8448)
     enabled: true
+
+    enableIngress: true
 
     # Set to false to disallow members of other homeservers from fetching *public* rooms
     allowPublicRooms: true
@@ -206,6 +207,18 @@ volumes:
     # Storage class (optional)
     storageClass: ""
 
+ingress:
+  enabled: true
+  # Whether to expose the federation API behind the Ingress
+  # If you would rather use an external proxy to run federation on a port other than 443, set this to false and set the synapse.service.federation.type value to either LoadBalancer or NodePort
+  federation: true
+  tls: []
+  hosts:
+    synapse: matrix.chart-example.local
+    riot: riot.chart-example.local
+    federation: matrix-fed.chart-example.local
+  annotations: {}
+
 # PostgreSQL Database Configuration
 postgresql:
   # Whether to deploy the stable/postgresql chart with this chart. If disabled, make sure PostgreSQL is available at the hostname below and credentials are configured below
@@ -242,9 +255,8 @@ synapse:
     type: ClusterIP
     port: 80
     federation:
-      type: NodePort
-      # Warning! By spec, federation must be available at <synapse url>:8448. Only change this if Synapse is running behind another proxy
-      port: 8448
+      type: ClusterIP
+      port: 80
   replicaCount: 1
   resources: {}
 
@@ -597,11 +609,3 @@ fullnameOverride: ""
 
 networkPolicies:
   enabled: true
-
-ingress:
-  enabled: true
-  tls: []
-  hosts:
-    synapse: matrix.chart-example.local
-    riot: riot.chart-example.local
-  annotations: {}
