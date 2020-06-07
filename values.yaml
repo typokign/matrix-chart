@@ -181,6 +181,13 @@ matrix:
     #     acceptKeysInsecurely: false
     #   - serverName: my_other_trusted_server.example.com
 
+    # Enable TLS encrypted port on 8448
+    enableTls: true
+    # Full path to PEM-encoded certificate for TLS
+    tlsCertPath: /data/certs/tls.crt
+    # Full path to PEM-encoded private key for TLS
+    tlsKeyPath: /data/certs/tls.key
+
   logging:
     # Root log level is the default log level for log outputs that do not have more
     # specific settings.

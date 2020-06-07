@@ -178,11 +178,14 @@ listeners:
     # will also need to give Synapse a TLS key and certificate: see the TLS section
     # below.)
     #
-    #- port: 8448
-    #  type: http
-    #  tls: true
-    #  resources:
-    #    - names: [client, federation]
+
+    - port: 8448
+      type: http
+      {{- if .Values.matrix.security.enableTls }}
+      tls: true
+      {{- end }}
+      resources:
+        - names: [federation]
 
     # Unsecure HTTP listener: for when matrix traffic passes through a reverse proxy
     # that unwraps TLS.
@@ -197,7 +200,7 @@ listeners:
       bind_addresses: ['0.0.0.0']
 
       resources:
-          - names: [client, federation]
+          - names: [client]
             compress: false
 
         # example additional_resources:
@@ -327,11 +330,16 @@ redaction_retention_period: {{ .Values.matrix.retentionPeriod | default "null" }
 # instance, if using certbot, use `fullchain.pem` as your certificate,
 # not `cert.pem`).
 #
-#tls_certificate_path: "/synapse/conf/example.com.tls.crt"
+{{- if .Values.matrix.security.enableTls }}
+tls_certificate_path: {{ .Values.matrix.security.tlsCertPath }}
+{{- end }}
+
 
 # PEM-encoded private key for TLS
 #
-#tls_private_key_path: "/synapse/conf/example.com.tls.key"
+{{- if .Values.matrix.security.enableTls }}
+tls_private_key_path: {{ .Values.matrix.security.tlsKeyPath }}
+{{- end }}
 
 # Whether to verify TLS server certificates for outbound federation requests.
 #

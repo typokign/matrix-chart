@@ -66,6 +66,9 @@ spec:
             - name: http
               containerPort: 8008
               protocol: TCP
+            - name: federation
+              containerPort: 8448
+              protocol: TCP
           volumeMounts:
             - name: synapse-config
               mountPath: /data
@@ -82,6 +85,9 @@ spec:
               mountPath: /data/uploads
             - name: tmp
               mountPath: /tmp
+            - name: cert-manager-tls
+              mountPath: /data/certs
+              readOnly: true
           livenessProbe:
             httpGet:
               path: /_matrix/static/
@@ -120,3 +126,6 @@ spec:
           emptyDir: {}
         - name: tmp
           emptyDir: {}
+        - name: cert-manager-tls
+          secret:
+            secretName: matrix-tls

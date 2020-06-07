@@ -9,7 +9,7 @@ spec:
   type: {{ .Values.synapse.service.federation.type }}
   ports:
     - port: {{ .Values.synapse.service.federation.port }}
-      targetPort: http
+      targetPort: federation
       protocol: TCP
   selector:
     app.kubernetes.io/name: {{ include "matrix.name" . }}-synapse
