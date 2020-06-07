@@ -320,7 +320,7 @@ riot:
   # Riot Kubernetes resource settings
   image:
     repository: "vectorim/riot-web"
-    tag: v1.6.2
+    tag: v1.6.4
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
