@@ -215,7 +215,10 @@ ingress:
     synapse: matrix.chart-example.local
     riot: riot.chart-example.local
     federation: matrix-fed.chart-example.local
-  annotations: {}
+  annotations:
+    # This annotation is required for the Nginx ingress provider. You can remove it if you use a different ingress provider
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      proxy_intercept_errors off;
 
 # PostgreSQL Database Configuration
 postgresql:
