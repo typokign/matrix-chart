@@ -32,12 +32,24 @@ spec:
             - name: smtp
               containerPort: 8025
               protocol: TCP
-          livenessProbe:
-            tcpSocket:
-              port: 8025
           readinessProbe:
             tcpSocket:
-              port: 8025
+              port: smtp
+            {{- if .Values.mail.relay.probes.readiness }}
+            {{- toYaml .Values.mail.relay.probes.readiness | nindent 12 }}
+            {{- end }}
+          startupProbe:
+            tcpSocket:
+              port: smtp
+            {{- if .Values.mail.relay.probes.startup }}
+            {{- toYaml .Values.mail.relay.probes.startup | nindent 12 }}
+            {{- end }}
+          livenessProbe:
+            tcpSocket:
+              port: smtp
+            {{- if .Values.mail.relay.probes.liveness }}
+            {{- toYaml .Values.mail.relay.probes.liveness | nindent 12 }}
+            {{- end }}
           securityContext:
             capabilities:
               drop:

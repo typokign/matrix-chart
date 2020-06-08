@@ -55,14 +55,27 @@ spec:
             - mountPath: /var/run/pid
               name: ephemeral
               subPath: pid
-          livenessProbe:
-            httpGet:
-              path: /
-              port: http
           readinessProbe:
             httpGet:
               path: /
               port: http
+            {{- if .Values.riot.probes.readiness }}
+            {{- toYaml .Values.riot.probes.readiness | nindent 12 }}
+            {{- end }}
+          startupProbe:
+            httpGet:
+              path: /
+              port: http
+            {{- if .Values.riot.probes.startup }}
+            {{- toYaml .Values.riot.probes.startup | nindent 12 }}
+            {{- end }}
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            {{- if .Values.riot.probes.liveness }}
+            {{- toYaml .Values.riot.probes.liveness | nindent 12 }}
+            {{- end }}
           securityContext:
             capabilities:
               drop:

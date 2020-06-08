@@ -50,8 +50,6 @@ spec:
         - name: "load-config"
           image: "{{ .Values.bridges.irc.image.repository }}:{{ .Values.bridges.irc.image.tag }}"
           imagePullPolicy: {{ .Values.bridges.irc.image.pullPolicy }}
-{{/*          command: ["sleep"]*/}}
-{{/*          args: ["10000"]*/}}
           command: ["sh"]
           args: ["-c", "cp /load/registration.yaml /data/appservice-registration-irc.yaml; cp /load/passkey.pem /data/passkey.pem; cp /load/config.yaml /data/config.yaml; cp /load/registration.yaml /bridges/irc.yaml"]
           volumeMounts:

@@ -257,6 +257,18 @@ synapse:
       port: 80
   replicaCount: 1
   resources: {}
+  # Configure timings for readiness, startup, and liveness probes here
+  probes:
+    readiness:
+      timeoutSeconds: 5
+      periodSeconds: 10
+    startup:
+      timeoutSeconds: 5
+      periodSeconds: 5
+      failureThreshold: 6
+    liveness:
+      timeoutSeconds: 5
+      periodSeconds: 10
 
 # Riot Web client configuration
 riot:
@@ -325,6 +337,10 @@ riot:
     port: 80
   replicaCount: 1
   resources: {}
+  probes:
+    readiness: {}
+    startup: {}
+    liveness: {}
 
 # Settings for Coturn TURN relay, used for routing voice calls
 coturn:
@@ -393,6 +409,10 @@ mail:
       port: 25
     replicaCount: 1
     resources: {}
+    probes:
+      readiness: {}
+      startup: {}
+      liveness: {}
 
   # External mail server
   external:

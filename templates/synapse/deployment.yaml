@@ -84,14 +84,27 @@ spec:
               mountPath: /data/uploads
             - name: tmp
               mountPath: /tmp
-          livenessProbe:
-            httpGet:
-              path: /_matrix/static/
-              port: http
           readinessProbe:
             httpGet:
               path: /_matrix/static/
               port: http
+            {{- if .Values.synapse.probes.readiness }}
+            {{- toYaml .Values.synapse.probes.readiness | nindent 12 }}
+            {{- end }}
+          startupProbe:
+            httpGet:
+              path: /_matrix/static/
+              port: http
+            {{- if .Values.synapse.probes.startup }}
+            {{- toYaml .Values.synapse.probes.startup | nindent 12 }}
+            {{- end }}
+          livenessProbe:
+            httpGet:
+              path: /_matrix/static/
+              port: http
+            {{- if .Values.synapse.probes.liveness }}
+            {{- toYaml .Values.synapse.probes.liveness | nindent 12 }}
+            {{- end }}
           securityContext:
             capabilities:
               drop:
