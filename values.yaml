@@ -39,8 +39,6 @@ matrix:
     # Set to false to disable federation and run an isolated homeserver
     enabled: true
 
-    enableIngress: true
-
     # Set to false to disallow members of other homeservers from fetching *public* rooms
     allowPublicRooms: true
 
