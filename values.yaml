@@ -250,7 +250,7 @@ postgresql:
 synapse:
   image:
     repository: "matrixdotorg/synapse"
-    tag: v1.14.0
+    tag: v1.15.0
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
@@ -389,7 +389,7 @@ coturn:
 
   image:
     repository: "instrumentisto/coturn"
-    tag: "4.5.1.1"
+    tag: "4.5.1.2"
     pullPolicy: IfNotPresent
   replicaCount: 1
   resources: {}
@@ -411,7 +411,7 @@ mail:
     enabled: true
     image:
       repository: "devture/exim-relay"
-      tag: "4.92.2-r0-0"
+      tag: "4.93.1-r0"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -456,7 +456,7 @@ bridges:
 
     image:
       repository: "matrixdotorg/matrix-appservice-irc"
-      tag: "release-0.16.0"
+      tag: "release-0.17.1"
       pullPolicy: IfNotPresent
     replicaCount: 1
     resources: {}
