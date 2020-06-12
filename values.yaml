@@ -347,8 +347,14 @@ riot:
 
 # Settings for Coturn TURN relay, used for routing voice calls
 coturn:
-  # Set to false to disable Coturn
+  # Set to false to disable the included deployment of Coturn
   enabled: true
+
+  # URIs of the Coturn servers
+  # If deploying Coturn with this chart, include the public IPs of each node in your cluster (or a DNS round-robin hostname)
+  # You can also include an external Coturn instance if you'd prefer
+  uris: []
+#    - "turn:turn.example.com?transport=udp"
 
   # How to deploy Coturn
   # Options:

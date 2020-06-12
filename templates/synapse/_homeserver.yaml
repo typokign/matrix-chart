@@ -745,7 +745,7 @@ max_spider_size: {{ .Values.matrix.urlPreviews.rules.maxSize }}
 #recaptcha_siteverify_api: "https://www.recaptcha.net/recaptcha/api/siteverify"
 
 
-{{- if .Values.coturn.enabled }}
+{{- if not (empty .Values.coturn.uris) }}
 ## TURN ##
 
 # The public URIs of the TURN server to give to clients
