@@ -7,6 +7,11 @@ metadata:
 {{ include "matrix.labels" . | indent 4 }}
 spec:
   replicas: {{ .Values.bridges.whatsapp.replicaCount }}
+  updateStrategy:
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 0
+    type: RollingUpdate
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ include "matrix.name" . }}-bridge-whatsapp
