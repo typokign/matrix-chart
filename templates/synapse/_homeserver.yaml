@@ -2268,4 +2268,4 @@ opentracing:
 {{- toYaml .Values.matrix.homeserverExtra }}
 {{- end }}
 {{- end }}
-{{- end}}
+{{- end }}

@@ -52,5 +52,7 @@ For more information, check out the official documentation at https://github.com
 The Discord bridge has been enabled!
 
 You'll need to follow the instructions at https://github.com/Half-Shot/matrix-appservice-discord#setting-up-discord to finish setting up the bridge
+
+When you've finished setting up the bridge, head to https://discord.com/oauth2/authorize?client_id={{ .Values.bridges.discord.auth.clientId }}&scope=bot&permissions=607251456 to invite the bridge bot to a Discord guild.
 {{- end }}
 {{- end }}
