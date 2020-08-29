@@ -1,5 +1,13 @@
 # Runtime configuration for Synapse and settings related to the Matrix protocol
 matrix:
+  # Manual overrides for homeserver.yaml, the main configuration file for Synapse
+  # If homeserverOverride is set, the entirety of homeserver.yaml will be replaced with the contents.
+  # If homeserverExtra is set, the contents will be appended to the end of the default configuration.
+  # It is highly recommended that you take a look at the defaults in templates/synapse/_homeserver.yaml, to get a sense
+  # of the requirements and default configuration options to use other services in this chart.
+  # homeserverOverride: {}
+  # homeserverExtra: {}
+
   # Domain name of the server
   # This is not necessarily the host name where the service is reachable. In fact, you may want to omit any subdomains
   # from this value as the server name set here will be the name of your homeserver in the fediverse, and will be the
@@ -22,6 +30,12 @@ matrix:
 
   # Set to false to disable message searching
   search: true
+
+  # Which types of rooms to enable end-to-end encryption on by default
+  # off: none
+  # invite: private messages, or rooms created with the private_chat or trusted_private_chat room preset
+  # all: all rooms
+  encryptByDefault: invite
 
   # Email address of the administrator
   adminEmail: "admin@example.com"
@@ -126,6 +140,9 @@ matrix:
         #  # blacklist any URL with a literal IPv4 address
         #  - netloc: '^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$'
 
+  # How long to keep redacted events in unredacted form in the database
+  retentionPeriod: 7d
+
   security:
     # a secret which is used to sign access tokens. If none is specified,
     # the registration_shared_secret is used, if one is given; otherwise,
@@ -179,6 +196,11 @@ matrix:
     #         key: "abcdefghijklmnopqrstuvwxyzabcdefghijklmopqr"
     #     acceptKeysInsecurely: false
     #   - serverName: my_other_trusted_server.example.com
+
+  # Set to true to globally block access to the homeserver
+  disabled: false
+  # Human readable reason for why the homeserver is blocked
+  disabledMessage: ""
 
   logging:
     # Root log level is the default log level for log outputs that do not have more
@@ -250,7 +272,7 @@ postgresql:
 synapse:
   image:
     repository: "matrixdotorg/synapse"
-    tag: v1.15.2
+    tag: v1.19.0
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
@@ -273,15 +295,15 @@ synapse:
       timeoutSeconds: 5
       periodSeconds: 10
 
-# Riot Web client configuration
+# Element (formerly Riot Web) client configuration
 riot:
-  # Set to false to disable a deployment of riot-web. Users will still be able to connect via any other instances of riot-web (such as https://riot.im), riot-desktop, or any other Matrix clients
+  # Set to false to disable a deployment of Element. Users will still be able to connect via any other instances of Element (such as https://app.element.io), Element Desktop, or any other Matrix clients
   enabled: true
 
   # Organization/enterprise branding
   branding:
     # Shown in email notifications
-    brand: "Riot"
+    brand: "Element"
     # Background of login splash screen
     welcomeBackgroundUrl: ""
     # Logo shown at top of login screen
@@ -291,9 +313,9 @@ riot:
 #      - text:
 #        url:
 
-  # Riot integrations configuration
+  # Element integrations configuration
   integrations:
-    # Set to false to disable the Integrations menu (including widgets, bots, and other plugins to Riot)
+    # Set to false to disable the Integrations menu (including widgets, bots, and other plugins to Element)
     enabled: true
     # UI to load when a user selects the Integrations button at the top-right of a room
     ui: "https://scalar.vector.im/"
@@ -307,8 +329,9 @@ riot:
       - "https://scalar-staging.vector.im/api"
       - "https://scalar-staging.riot.im/scalar/api"
 
-  # Experimental features in riot-web, see https://github.com/vector-im/riot-web/blob/develop/docs/labs.md
+  # Experimental features in Element, see https://github.com/vector-im/riot-web/blob/develop/docs/labs.md
   labs:
+    - feature_new_spinner
     - feature_pinning
     - feature_custom_status
     - feature_custom_tags
@@ -327,13 +350,13 @@ riot:
   # Set to the user ID (@username:domain.tld) of a bot to invite all new users to a DM with the bot upon registration
   welcomeUserId: ""
 
-  # Prefix before permalinks generated when users share links to rooms, users, or messages. If running an unfederated Synapse, set the below to the URL of your Riot instance.
+  # Prefix before permalinks generated when users share links to rooms, users, or messages. If running an unfederated Synapse, set the below to the URL of your Element instance.
   permalinkPrefix: "https://matrix.to"
 
-  # Riot Kubernetes resource settings
+  # Element Kubernetes resource settings
   image:
     repository: "vectorim/riot-web"
-    tag: v1.6.8
+    tag: v1.7.4
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
@@ -401,9 +424,9 @@ mail:
   enabled: true
   # Name and email address for outgoing mail
   from: "Matrix <matrix@example.com>"
-  # Optional: Riot instance URL.
+  # Optional: Element instance URL.
   # If the ingress is enabled, this is unnecessary.
-  # If the ingress is disabled and this is left unspecified, emails will contain a link to https://riot.im
+  # If the ingress is disabled and this is left unspecified, emails will contain a link to https://app.element.io
   riotUrl: ""
 
   # Exim relay
@@ -456,7 +479,7 @@ bridges:
 
     image:
       repository: "matrixdotorg/matrix-appservice-irc"
-      tag: "release-0.18.0"
+      tag: "release-0.20.1"
       pullPolicy: IfNotPresent
     replicaCount: 1
     resources: {}
