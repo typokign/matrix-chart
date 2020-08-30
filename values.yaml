@@ -277,7 +277,7 @@ postgresql:
 synapse:
   image:
     repository: "matrixdotorg/synapse"
-    tag: v1.19.0
+    tag: v1.19.1
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
@@ -485,7 +485,7 @@ bridges:
 
     image:
       repository: "matrixdotorg/matrix-appservice-irc"
-      tag: "release-0.20.1"
+      tag: "release-0.20.2"
       pullPolicy: IfNotPresent
     replicaCount: 1
     resources: {}
