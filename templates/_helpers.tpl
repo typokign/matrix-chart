@@ -63,3 +63,14 @@ Synapse hostname prepended with https:// to form a complete URL
 {{- printf "https://%s" .Values.ingress.hosts.synapse -}}
 {{- end }}
 {{- end }}
+
+{{/*
+Helper function to get a postgres connection string for the database, with all of the auth and SSL settings automatically applied
+*/}}
+{{- define "matrix.postgresUri" -}}
+{{- if .Values.postgresql.enabled -}}
+postgres://{{ .Values.postgresql.username }}:{{ .Values.postgresql.password }}@{{ include "matrix.fullname" . }}-postgresql/%s{{ if .Values.postgresql.ssl }}?ssl=true&sslmode={{ .Values.postgresql.sslMode}}{{ end }}
+{{- else -}}
+postgres://{{ .Values.postgresql.username }}:{{ .Values.postgresql.password }}@{{ .Values.postgresql.hostname }}:{{ .Values.postgresql.port }}/%s{{ if .Values.postgresql.ssl }}?ssl=true&sslmode={{ .Values.postgresql.sslMode }}{{ end }}
+{{- end }}
+{{- end }}

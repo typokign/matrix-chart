@@ -601,6 +601,7 @@ database:
         host: "{{ .Values.postgresql.hostname }}"
         port: "{{ .Values.postgresql.port }}"
         {{- end }}
+        sslmode: {{ .Values.postgresql.sslMode }}
         cp_min: 5
         cp_max: 10
 
