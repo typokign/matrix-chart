@@ -235,7 +235,7 @@ ingress:
   tls: []
   hosts:
     synapse: matrix.chart-example.local
-    riot: riot.chart-example.local
+    riot: element.chart-example.local
     federation: matrix-fed.chart-example.local
   annotations:
     # This annotation is required for the Nginx ingress provider. You can remove it if you use a different ingress provider
