@@ -75,6 +75,11 @@ spec:
         - name: "bridge-irc"
           image: "{{ .Values.bridges.irc.image.repository }}:{{ .Values.bridges.irc.image.tag }}"
           imagePullPolicy: {{ .Values.bridges.irc.image.pullPolicy }}
+          {{- if not .Values.bridges.irc.database.sslVerify}}
+          env:
+            - name: NODE_TLS_REJECT_UNAUTHORIZED
+              value: "0"
+          {{ end }}
           ports:
             - name: bridge
               containerPort: 9006

@@ -461,7 +461,10 @@ bridges:
     # Whether to enable presence (online/offline indicators). If presence is disabled for the homeserver (above), it should be disabled here too
     presence: false
     # Name of Postgres database to store IRC bridge data in, this database will be created if the included Postgres chart is enabled, otherwise you must create it manually
-    database: "matrix_irc"
+    database:
+      name: "matrix_irc"
+      ssl: false
+      sslVerify: true
 
     # Object of IRC servers to connect to, see https://github.com/matrix-org/matrix-appservice-irc/blob/master/config.sample.yaml for config options
     servers:

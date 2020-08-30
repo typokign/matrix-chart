@@ -187,8 +187,8 @@ database:
   # For postgres, it must start with postgres://
   # For NeDB, it must start with nedb://. The path is relative to the project directory.
   {{- if .Values.postgresql.enabled }}
-  connectionString: "postgres://{{ .Values.postgresql.username }}:{{ .Values.postgresql.password }}@{{ include "matrix.fullname" . }}-postgresql/{{ .Values.bridges.irc.database }}"
+  connectionString: "postgres://{{ .Values.postgresql.username }}:{{ .Values.postgresql.password }}@{{ include "matrix.fullname" . }}-postgresql/{{ .Values.bridges.irc.database.name }}{{ if .Values.bridges.irc.database.ssl }}?ssl=require&sslmode=allow{{ end }}"
   {{- else }}
-  connectionString: "postgres://{{ .Values.postgresql.username }}:{{ .Values.postgresql.password }}@{{ .Values.postgresql.hostname }}:{{ .Values.postgresql.port }}/{{ .Values.bridges.irc.database }}"
+  connectionString: "postgres://{{ .Values.postgresql.username }}:{{ .Values.postgresql.password }}@{{ .Values.postgresql.hostname }}:{{ .Values.postgresql.port }}/{{ .Values.bridges.irc.database.name }}{{ if .Values.bridges.irc.database.ssl }}?ssl=require&sslmode=allow{{ end }}"
   {{- end }}
 {{- end }}
