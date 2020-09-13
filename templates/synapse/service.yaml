@@ -11,6 +11,12 @@ spec:
       targetPort: http
       protocol: TCP
       name: http
+    {{- if .Values.synapse.metrics.enabled }}
+    - port: {{ .Values.synapse.metrics.port }}
+      targetPort: prometheus-http
+      protocol: TCP
+      name: prometheus-http
+    {{- end }}
   selector:
     app.kubernetes.io/name: {{ include "matrix.name" . }}-synapse
     app.kubernetes.io/instance: {{ .Release.Name }}
