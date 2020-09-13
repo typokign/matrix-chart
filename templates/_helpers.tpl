@@ -40,6 +40,36 @@ helm.sh/chart: {{ include "matrix.chart" . }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
+app: matrix
+{{- end -}}
+
+
+{{/*
+Synapse specific labels
+*/}}
+{{- define "matrix.synapse.labels" -}}
+component: synapse
+{{- end -}}
+
+{{/*
+Element specific labels
+*/}}
+{{- define "matrix.element.labels" -}}
+component: element
+{{- end -}}
+
+{{/*
+Coturn specific labels
+*/}}
+{{- define "matrix.coturn.labels" -}}
+component: coturn
+{{- end -}}
+
+{{/*
+Mail specific labels
+*/}}
+{{- define "matrix.mail.labels" -}}
+component: mail
 {{- end -}}
 
 {{/*

@@ -5,6 +5,7 @@ metadata:
   name: {{ include "matrix.fullname" . }}-coturn-config
   labels:
 {{ include "matrix.labels" . | nindent 4}}
+{{ include "matrix.coturn.labels" . | indent 4}}
 data:
   turnserver.conf: |
     use-auth-secret
