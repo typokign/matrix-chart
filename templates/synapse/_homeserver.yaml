@@ -223,6 +223,14 @@ listeners:
     #    module: my_module.CustomRequestHandler
     #    config: {}
 
+{{- if .Values.synapse.metrics.enabled }}
+  - type: metrics
+    port: {{ .Values.synapse.metrics.port }}
+    bind_addresses: ['0.0.0.0']
+
+    resources:
+      - names: [metrics]
+{{- end }}
   # Turn on the twisted ssh manhole service on localhost on the given
   # port.
   #
@@ -1165,7 +1173,10 @@ auto_join_rooms:
 
 # Enable collection and rendering of performance metrics
 #
-#enable_metrics: false
+
+{{- if .Values.synapse.metrics.enabled }}
+enable_metrics: true
+{{- end }}
 
 # Enable sentry integration
 # NOTE: While attempts are made to ensure that the logs don't contain

@@ -300,6 +300,16 @@ synapse:
       timeoutSeconds: 5
       periodSeconds: 10
 
+  # Prometheus metrics for Synapse
+  # https://github.com/matrix-org/synapse/blob/master/docs/metrics-howto.md
+  metrics:
+    # Whether Synapse should capture metrics on an additional endpoint
+    enabled: true
+    # Port to listen on for metrics scraping
+    port: 9092
+    annotations: true
+
+
 # Element (formerly Riot Web) client configuration
 riot:
   # Set to false to disable a deployment of Element. Users will still be able to connect via any other instances of Element (such as https://app.element.io), Element Desktop, or any other Matrix clients
