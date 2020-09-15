@@ -17,6 +17,11 @@ spec:
       annotations:
         # re-roll deployment on homeserver.yaml change
         checksum/synapse-config: {{ include (print $.Template.BasePath "/synapse/configmap.yaml") . | sha256sum }}
+{{- if and (eq .Values.synapse.metrics.enabled true) (eq .Values.synapse.metrics.annotations true) }}
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/_synapse/metrics"
+        prometheus.io/port: {{ .Values.synapse.metrics.port | quote }}
+{{- end }}
       labels:
         app.kubernetes.io/name: {{ include "matrix.name" . }}-synapse
         app.kubernetes.io/instance: {{ .Release.Name }}
@@ -68,6 +73,11 @@ spec:
             - name: http
               containerPort: 8008
               protocol: TCP
+            {{- if .Values.synapse.metrics.enabled }}
+            - name: prometheus-http
+              containerPort: {{ .Values.synapse.metrics.port }}
+              protocol: TCP
+            {{- end }}
           volumeMounts:
             - name: synapse-config
               mountPath: /data
