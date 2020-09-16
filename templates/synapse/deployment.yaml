@@ -70,7 +70,7 @@ spec:
               containerPort: 8008
               protocol: TCP
             {{- if .Values.synapse.metrics.enabled }}
-            - name: prometheus-http
+            - name: metrics
               containerPort: {{ .Values.synapse.metrics.port }}
               protocol: TCP
             {{- end }}

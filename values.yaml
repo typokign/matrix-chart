@@ -14,10 +14,6 @@ matrix:
   # domain name at the end of every user's username
   serverName: "example.com"
 
-  # Global labels to append to all deployments / services etc.
-  labels:
-    app: "matrix"
-
   # Enable anonymous telemetry to matrix.org
   telemetry: false
 
