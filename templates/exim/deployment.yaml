@@ -5,6 +5,7 @@ metadata:
   name: {{ include "matrix.fullname" . }}-exim-relay
   labels:
 {{ include "matrix.labels" . | indent 4 }}
+{{ include "matrix.mail.labels" . | indent 4}}
 spec:
   replicas: {{ .Values.mail.relay.replicaCount }}
   selector:

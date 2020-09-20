@@ -5,6 +5,7 @@ metadata:
   name: {{ include "matrix.fullname" . }}-riot
   labels:
 {{ include "matrix.labels" . | indent 4 }}
+{{ include "matrix.element.labels" . | indent 4}}
 spec:
   podSelector:
     matchLabels:

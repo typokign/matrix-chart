@@ -4,6 +4,7 @@ metadata:
   name: {{ include "matrix.fullname" . }}-riot-config
   labels:
 {{ include "matrix.labels" . | nindent 4}}
+{{ include "matrix.element.labels" . | indent 4}}
 data:
   config.json: |
     {

@@ -5,6 +5,7 @@ metadata:
   name: {{ include "matrix.fullname" . }}-coturn
   labels:
 {{ include "matrix.labels" . | indent 4 }}
+{{ include "matrix.coturn.labels" . | indent 4}}
 spec:
   podSelector:
     matchLabels:

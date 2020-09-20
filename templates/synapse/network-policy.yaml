@@ -5,6 +5,7 @@ metadata:
   name: {{ include "matrix.fullname" . }}-synapse
   labels:
 {{ include "matrix.labels" . | indent 4 }}
+{{ include "matrix.synapse.labels" . | indent 4}}
 spec:
   podSelector:
     matchLabels:

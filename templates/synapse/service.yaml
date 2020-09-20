@@ -4,6 +4,13 @@ metadata:
   name: {{ include "matrix.fullname" . }}-synapse
   labels:
 {{ include "matrix.labels" . | indent 4 }}
+{{ include "matrix.synapse.labels" . | indent 4}}
+  annotations:
+{{- if and (eq .Values.synapse.metrics.enabled true) (eq .Values.synapse.metrics.annotations true) }}
+    prometheus.io/scrape: "true"
+    prometheus.io/path: "/_synapse/metrics"
+    prometheus.io/port: {{ .Values.synapse.metrics.port | quote }}
+{{- end }}
 spec:
   type: {{ .Values.synapse.service.type }}
   ports:
@@ -11,6 +18,12 @@ spec:
       targetPort: http
       protocol: TCP
       name: http
+    {{- if .Values.synapse.metrics.enabled }}
+    - port: {{ .Values.synapse.metrics.port }}
+      targetPort: metrics
+      protocol: TCP
+      name: metrics
+    {{- end }}
   selector:
     app.kubernetes.io/name: {{ include "matrix.name" . }}-synapse
     app.kubernetes.io/instance: {{ .Release.Name }}

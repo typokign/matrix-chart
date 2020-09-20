@@ -300,6 +300,10 @@ synapse:
       timeoutSeconds: 5
       periodSeconds: 10
 
+  # Labels to be appended to all Synapse resources
+  labels:
+    component: synapse
+  
   # Prometheus metrics for Synapse
   # https://github.com/matrix-org/synapse/blob/master/docs/metrics-howto.md
   metrics:
@@ -383,6 +387,10 @@ riot:
     startup: {}
     liveness: {}
 
+  # Element specific labels
+  labels:
+    component: element
+
 # Settings for Coturn TURN relay, used for routing voice calls
 coturn:
   # Set to false to disable the included deployment of Coturn
@@ -432,6 +440,10 @@ coturn:
   replicaCount: 1
   resources: {}
 
+  # Coturn specific labels
+  labels:
+    component: coturn
+
 # Settings for email notifications
 mail:
   # Set to false to disable all email notifications
@@ -460,6 +472,10 @@ mail:
       readiness: {}
       startup: {}
       liveness: {}
+  
+  # Mail relay specific labels
+  labels:
+    component: mail
 
   # External mail server
   external:

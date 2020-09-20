@@ -40,6 +40,44 @@ helm.sh/chart: {{ include "matrix.chart" . }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
+app.kubernetes.io/name: "matrix"
+{{- end -}}
+# TODO: Include labels from values
+{{/*
+Synapse specific labels
+*/}}
+{{- define "matrix.synapse.labels" -}}
+{{- range $key, $val := .Values.synapse.labels -}}
+{{ $key }}: {{ $val }}
+{{- end }}
+{{- end -}}
+
+{{/*
+Element specific labels
+*/}}
+#TOOO: Change riot to element
+{{- define "matrix.element.labels" -}}
+{{- range $key, $val := .Values.riot.labels }}
+{{ $key }}: {{ $val }}
+{{- end }}
+{{- end -}}
+
+{{/*
+Coturn specific labels
+*/}}
+{{- define "matrix.coturn.labels" -}}
+{{- range $key, $val := .Values.coturn.labels -}}
+{{ $key }}: {{ $val }}
+{{- end }}
+{{- end -}}
+
+{{/*
+Mail specific labels
+*/}}
+{{- define "matrix.mail.labels" -}}
+{{- range $key, $val := .Values.matrix.labels -}}
+{{ $key }}: {{ $val }}
+{{- end }}
 {{- end -}}
 
 {{/*
