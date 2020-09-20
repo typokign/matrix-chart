@@ -72,10 +72,10 @@ Coturn specific labels
 {{- end -}}
 
 {{/*
-Mail specific labels
+Mail relay specific labels
 */}}
 {{- define "matrix.mail.labels" -}}
-{{- range $key, $val := .Values.matrix.labels -}}
+{{- range $key, $val := .Values.mail.relay.labels -}}
 {{ $key }}: {{ $val }}
 {{- end }}
 {{- end -}}

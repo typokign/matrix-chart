@@ -472,11 +472,11 @@ mail:
       readiness: {}
       startup: {}
       liveness: {}
-  
-  # Mail relay specific labels
-  labels:
-    component: mail
+    # Mail relay specific labels
+    labels:
+      component: mail
 
+  
   # External mail server
   external:
     host: ""
