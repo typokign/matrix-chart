@@ -151,7 +151,14 @@ data:
         # the command prefix completely like in user management rooms is not possible.
         management: {{ .Values.bridges.whatsapp.relaybot.management }}
         # List of users to invite to all created rooms that include the relaybot.
-        invites: {{ .Values.bridges.whatsapp.relaybot.invites }}
+        {{- if .Values.bridges.whatsapp.relaybot.invites }}
+        invites:{{- if .Values.bridges.whatsapp.relaybot.invites }}
+        {{- range initial .Values.bridges.whatsapp.relaybot.invites }}
+        - {{ . | quote }}
+        {{- end }}
+        - {{ last .Values.bridges.whatsapp.relaybot.invites | quote }}
+        {{- end }}
+        {{- end }}
         # The formats to use when sending messages to WhatsApp via the relaybot.
         message_formats:
           m.text: "<b>{{ "{{ .Sender.Displayname }}" }}</b>: {{ "{{ .Message }}" }}"
