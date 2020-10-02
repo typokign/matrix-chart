@@ -56,17 +56,17 @@ spec:
           image: "{{ .Values.bridges.whatsapp.image.repository }}:{{ .Values.bridges.whatsapp.image.tag }}"
           imagePullPolicy: {{ .Values.bridges.whatsapp.image.pullPolicy }}
           command: ["sh"]
-          args: ["-c", "cp /load/config.yaml /data/config.yaml"]
+          args: ["-c", "cp /load/config.yaml /data/config.yaml; touch /bridges/whatsapp.yaml; chown 1000:1000 /data/config.yaml /bridges/whatsapp.yaml"]
           volumeMounts:
             - name: data
               mountPath: /data
             - name: config
               mountPath: /load
               readOnly: true
+            - name: bridges
+              mountPath: /bridges
           securityContext:
-            capabilities:
-              drop:
-                - ALL
+            runAsUser: 0
             readOnlyRootFilesystem: true
             allowPrivilegeEscalation: false
         - name: "generate-config"
