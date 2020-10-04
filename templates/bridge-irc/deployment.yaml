@@ -74,6 +74,8 @@ spec:
       containers:
         - name: "bridge-irc"
           image: "{{ .Values.bridges.irc.image.repository }}:{{ .Values.bridges.irc.image.tag }}"
+          command: "node"
+          args: [ "app.js", "-c", "/data/config.yaml", "-f", "/data/appservice-registration-irc.yaml" ]
           imagePullPolicy: {{ .Values.bridges.irc.image.pullPolicy }}
           {{- if not .Values.bridges.irc.databaseSslVerify }}
           env:
