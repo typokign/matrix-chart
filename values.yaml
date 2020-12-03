@@ -604,7 +604,7 @@ bridges:
       enabled: false
 
       # Management room for the relay bot where status notifications are posted
-      management: "!lcTxjUsyLWagPwcfUP:example.com"
+      management: "!xxxyourroomIDxxx:example.com"
 
       # Users to invite to the management room automatically
       invites: []
