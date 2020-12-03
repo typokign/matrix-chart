@@ -490,8 +490,8 @@ bridges:
 
   slack:
     # Set to true to enable the slack bridge
-    enabled: false  #if tru, give matrix as a release name bcoz see deployment file
-    matrix_admin_room: !lcTxjUsyLWagPwcfUP:example.com
+    enabled: false  
+    matrix_admin_room: !xxxroomIDxxx:example.com #your room id
     image:
       repository: "matrixdotorg/matrix-appservice-slack"
       tag: "release-1.6.0-rc1"
