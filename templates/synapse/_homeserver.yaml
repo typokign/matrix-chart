@@ -1236,6 +1236,9 @@ app_service_config_files:
 {{- if .Values.bridges.irc.enabled }}
   - "/bridges/irc.yaml"
 {{- end }}
+{{- if .Values.bridges.slack.enabled }}
+  - "/bridges/slack.yaml"
+{{- end }}
 
 # Uncomment to enable tracking of application service IP addresses. Implicitly
 # enables MAU tracking for application service users.
