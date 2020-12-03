@@ -1,0 +1,24 @@
+{{- if .Values.bridges.slack.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "matrix.fullname" . }}-slack-config
+  labels:
+  {{ include "matrix.labels" . | nindent 4}}
+data:
+  config.yaml: |
+  {{ include "matrix.slack.config" . | nindent 4 }}
+  registration.yaml: |
+    id: appservice-slack
+    as_token: "{{ include "matrix.slack.as_token" . }}"
+    hs_token: "{{ include "matrix.slack.hs_token" . }}"
+    namespaces:
+      users:
+        - exclusive: true
+          regex: '@slack_.*:{{ include "matrix.fullname" . }}'
+      aliases:
+        - exclusive: true
+          regex: '#slack_.*:{{ include "matrix.fullname" . }}'
+    url: "http://{{ include "matrix.fullname" . }}-bridge-slack:{{ .Values.bridges.slack.service.port }}"
+    sender_localpart: slackbot
+{{- end }}

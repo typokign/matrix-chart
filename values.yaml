@@ -1,7 +1,7 @@
 # Runtime configuration for Synapse and settings related to the Matrix protocol
 matrix:
   # Manual overrides for homeserver.yaml, the main configuration file for Synapse
-  # If homeserverOverride is set, the entirety of homeserver.yaml will be replaced with the contents.
+  # If Override is set, the entirety of homeserver.yaml will be replaced with the contents.
   # If homeserverExtra is set, the contents will be appended to the end of the default configuration.
   # It is highly recommended that you take a look at the defaults in templates/synapse/_homeserver.yaml, to get a sense
   # of the requirements and default configuration options to use other services in this chart.
@@ -74,7 +74,7 @@ matrix:
   # User registration settings
   registration:
     # Allow new users to register an account
-    enabled: false
+    enabled: true
 
     # If set, allows registration of standard or admin accounts by anyone who
     # has the shared secret, even if registration is otherwise disabled.
@@ -234,9 +234,9 @@ ingress:
   federation: true
   tls: []
   hosts:
-    synapse: matrix.chart-example.local
-    riot: element.chart-example.local
-    federation: matrix-fed.chart-example.local
+    synapse: matrix.chart-example.localhost
+    riot: element.chart-example.localhost
+    federation: matrix-fed.chart-example.localhost
   annotations:
     # This annotation is required for the Nginx ingress provider. You can remove it if you use a different ingress provider
     nginx.ingress.kubernetes.io/configuration-snippet: |
@@ -293,9 +293,10 @@ synapse:
       timeoutSeconds: 5
       periodSeconds: 10
     startup:
+      initialDelaySeconds: 9
       timeoutSeconds: 5
       periodSeconds: 5
-      failureThreshold: 6
+      failureThreshold: 10
     liveness:
       timeoutSeconds: 5
       periodSeconds: 10
@@ -486,6 +487,25 @@ mail:
     requireTransportSecurity: true
 
 bridges:
+
+  slack:
+    # Set to true to enable the slack bridge
+    enabled: false  #if tru, give matrix as a release name bcoz see deployment file
+    matrix_admin_room: !lcTxjUsyLWagPwcfUP:example.com
+    image:
+      repository: "matrixdotorg/matrix-appservice-slack"
+      tag: "release-1.6.0-rc1"
+      pullPolicy: IfNotPresent
+    replicaCount: 1
+    resources: {}
+    service:
+      type: ClusterIP
+      port: 8090
+
+    data:
+      # Size of the data PVC to allocate
+      capacity: 1Mi
+
   irc:
     # Set to true to enable the IRC bridge
     enabled: false
@@ -584,7 +604,7 @@ bridges:
       enabled: false
 
       # Management room for the relay bot where status notifications are posted
-      management: "!foo:example.com"
+      management: "!lcTxjUsyLWagPwcfUP:example.com"
 
       # Users to invite to the management room automatically
       invites: []
@@ -673,7 +693,7 @@ bridges:
   # Recommended to leave this disabled to allow bridges to be scheduled on separate nodes.
   # Set this to true to reduce latency between the homeserver and bridges, or if your cloud provider does not allow
   # the ReadWriteMany access mode (see below)
-  affinity: false
+  affinity: true
   volume:
     # Capacity of the shared volume for storing bridge/appservice registration files
     # Note: 1Mi should be enough but some cloud providers may set a minimum PVC size of 1Gi, adjust as necessary
@@ -683,7 +703,7 @@ bridges:
     # Access mode of the shared volume. ReadWriteMany is recommended to allow bridges to be scheduled on separate nodes.
     # Some cloud providers may not allow the ReadWriteMany access mode. In that case, change this to ReadWriteOnce -AND-
     # set bridges.affinity (above) to true
-    accessMode: ReadWriteMany
+    accessMode: ReadWriteOnce
 
 imagePullSecrets: []
 nameOverride: ""

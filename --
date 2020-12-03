@@ -1,0 +1,9 @@
+id: 1957ad3ec43c599dbc503bebfef3c1710f036816246f9c6100fb78edb91fefe1
+hs_token: 30ca309a2c27929717c0c8234854049d8c0e9d1dfa9faea5e9aaae750f003e71
+as_token: 421c6e954f9fcfbce44fc191d7c2f0917ac7c590b938142507c6587de559cb8e
+url: 'http://localhost:8090'
+sender_localpart: slackbot
+namespaces:
+  users:
+    - exclusive: true
+      regex: '@slack_.*:example.com'

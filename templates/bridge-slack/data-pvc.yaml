@@ -1,0 +1,14 @@
+{{- if .Values.bridges.slack.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "matrix.fullname" . }}-slack-data
+  labels:
+  {{ include "matrix.labels" . | nindent 4}}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.bridges.slack.data.capacity }}
+{{- end }}

@@ -1221,8 +1221,11 @@ report_stats: {{ .Values.matrix.telemetry }}
 
 # A list of application service config files to use
 #
-{{- if or .Values.bridges.whatsapp.enabled .Values.bridges.discord.enabled .Values.bridges.irc.enabled }}
+{{- if or .Values.bridges.whatsapp.enabled .Values.bridges.discord.enabled .Values.bridges.irc.enabled .Values.bridges.slack.enabled }}
 app_service_config_files:
+{{- end }}
+{{- if .Values.bridges.slack.enabled }}
+  - "/bridges/slack.yaml"
 {{- end }}
 {{- if .Values.bridges.whatsapp.enabled }}
   - "/bridges/whatsapp.yaml"
