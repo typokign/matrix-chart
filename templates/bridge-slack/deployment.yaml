@@ -1,12 +1,12 @@
-{{- if .Values.bridges.irc.enabled }}
+{{- if .Values.bridges.slack.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "matrix.fullname" . }}-bridge-irc
+  name: {{ include "matrix.fullname" . }}-bridge-slack
   labels:
   {{ include "matrix.labels" . | nindent 4 }}
 spec:
-  replicas: {{ .Values.bridges.irc.replicaCount }}
+  replicas: {{ .Values.bridges.slack.replicaCount }}
   strategy:
     rollingUpdate:
       maxUnavailable: 1
@@ -14,16 +14,16 @@ spec:
     type: RollingUpdate
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "matrix.name" . }}-bridge-irc
+      app.kubernetes.io/name: {{ include "matrix.name" . }}-bridge-slack
       app.kubernetes.io/instance: {{ .Release.Name }}
       matrix-chart/allow-synapse-access: allow
   template:
     metadata:
       annotations:
         # re-roll deployment on config change
-        checksum/irc-config: {{ include (print $.Template.BasePath "/bridge-irc/configmap.yaml") . | sha256sum }}
+        checksum/slack-config: {{ include (print $.Template.BasePath "/bridge-slack/configmap.yaml") . | sha256sum }}
       labels:
-        app.kubernetes.io/name: {{ include "matrix.name" . }}-bridge-irc
+        app.kubernetes.io/name: {{ include "matrix.name" . }}-bridge-slack
         app.kubernetes.io/instance: {{ .Release.Name }}
         matrix-chart/allow-synapse-access: allow
     spec:
@@ -53,10 +53,10 @@ spec:
         fsGroup: 1000
       initContainers:
         - name: "load-config"
-          image: "{{ .Values.bridges.irc.image.repository }}:{{ .Values.bridges.irc.image.tag }}"
-          imagePullPolicy: {{ .Values.bridges.irc.image.pullPolicy }}
+          image: "{{ .Values.bridges.slack.image.repository }}:{{ .Values.bridges.slack.image.tag }}"
+          imagePullPolicy: {{ .Values.bridges.slack.image.pullPolicy }}
           command: ["sh"]
-          args: ["-c", "cp /load/registration.yaml /data/appservice-registration-irc.yaml; cp /load/passkey.pem /data/passkey.pem; cp /load/config.yaml /data/config.yaml; cp /load/registration.yaml /bridges/irc.yaml"]
+          args: ["-c", "cp /load/registration.yaml /data/appservice-registration-slack.yaml; cp /load/config.yaml /data/config.yaml; cp /load/registration.yaml /bridges/slack.yaml"]
           volumeMounts:
             - name: data
               mountPath: /data
@@ -72,20 +72,20 @@ spec:
             readOnlyRootFilesystem: true
             allowPrivilegeEscalation: false
       containers:
-        - name: "bridge-irc"
-          image: "{{ .Values.bridges.irc.image.repository }}:{{ .Values.bridges.irc.image.tag }}"
+        - name: "bridge-slack"
+          image: "{{ .Values.bridges.slack.image.repository }}:{{ .Values.bridges.slack.image.tag }}"
           command: 
             - "npm"
-          args: [ "start", "-c", "/data/config.yaml", "-f", "/data/appservice-registration-irc.yaml" ]
-          imagePullPolicy: {{ .Values.bridges.irc.image.pullPolicy }}
-          {{- if not .Values.bridges.irc.databaseSslVerify }}
+          args: [ "start", "-r", "-c", "/data/config.yaml", "-u", "http://matrix-bridge-slack:8090", "-f", "/data/appservice-registration-slack.yaml" ]
+          imagePullPolicy: {{ .Values.bridges.slack.image.pullPolicy }}
+          {{- if not .Values.bridges.slack.databaseSslVerify }}
           env:
             - name: NODE_TLS_REJECT_UNAUTHORIZED
               value: "0"
           {{- end }}
           ports:
             - name: bridge
-              containerPort: 9006
+              containerPort: 8090
               protocol: TCP
           volumeMounts:
             - name: data
@@ -96,17 +96,17 @@ spec:
                 - ALL
             readOnlyRootFilesystem: true
             allowPrivilegeEscalation: false
-          {{- with .Values.bridges.irc.resources }}
+          {{- with .Values.bridges.slack.resources }}
           resources:
           {{- toYaml . | nindent 12 }}
       {{- end }}
       volumes:
         - name: data
           persistentVolumeClaim:
-            claimName: "{{ include "matrix.fullname" . }}-irc-data"
+            claimName: "{{ include "matrix.fullname" . }}-slack-data"
         - name: config
           configMap:
-            name: "{{ include "matrix.fullname" . }}-irc-config"
+            name: "{{ include "matrix.fullname" . }}-slack-config"
         - name: bridges
           persistentVolumeClaim:
             claimName: "{{ include "matrix.fullname" . }}-bridges"

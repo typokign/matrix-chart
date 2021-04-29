@@ -1,0 +1,18 @@
+{{- if .Values.bridges.slack.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "matrix.fullname" . }}-bridge-slack
+  labels:
+  {{ include "matrix.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.bridges.slack.service.type }}
+  ports:
+    - port: {{ .Values.bridges.slack.service.port }}
+      targetPort: bridge
+      protocol: TCP
+      name: bridge
+  selector:
+    app.kubernetes.io/name: {{ include "matrix.name" . }}-bridge-slack
+    app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}

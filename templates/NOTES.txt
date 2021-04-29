@@ -28,9 +28,9 @@ Installed components:
 Thank you for installing dacruz21/matrix-chart! If you have any questions or run into any issues, please file a GitHub issue or join us at #matrix-chart:typokign.com.
 
 {{ if .Values.ingress.enabled }}
-Your Synapse homeserver should soon be available at https://{{ .Values.ingress.hosts.synapse }}
+Your Synapse homeserver should soon be available at http://{{ .Values.ingress.hosts.synapse }}
 {{- if .Values.riot.enabled }}
-Your Element Web instance should soon be available at https://{{ .Values.ingress.hosts.riot }}
+Your Element Web instance should soon be available at http://{{ .Values.ingress.hosts.riot }}
 {{- end }}
 {{- end }}
 
