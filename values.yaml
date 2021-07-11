@@ -61,15 +61,65 @@ matrix:
 
     # IP addresses to blacklist federation requests to
     blacklist:
-      - '127.0.0.0/8'
-      - '10.0.0.0/8'
-      - '172.16.0.0/12'
-      - '192.168.0.0/16'
-      - '100.64.0.0/10'
-      - '169.254.0.0/16'
-      - '::1/128'
-      - 'fe80::/64'
-      - 'fc00::/7'
+      - "127.0.0.0/8"
+      - "10.0.0.0/8"
+      - "172.16.0.0/12"
+      - "192.168.0.0/16"
+      - "100.64.0.0/10"
+      - "169.254.0.0/16"
+      - "::1/128"
+      - "fe80::/64"
+      - "fc00::/7"
+
+  # Authentication configuration (Local/OIDC/OAuth2)
+  authentication:
+    # Use internal authentication db only
+    internal: true
+
+    # OIDC Configuration
+    oidc:
+      enabled: false
+
+      # Discover endpoints. Defaults to true.
+      discover: true
+
+      # OIDC issuer. Used to validate tokens and (if discovery is enabled) to
+      # discover the provider's endpoints.
+      issuer: "https://auth.example.om/auth/realms/realm"
+
+      # OIDC client id to use.
+      client_id: "matrix.example.com"
+
+      # OIDC client secret.
+      client_secret: "<client-secret>"
+
+      # Possible client auth methods are 'client_secret_basic' (default), 'client_secret_post' and 'none'.
+      client_auth_method: client_secret_basic
+
+      # List of scopes to request. Defaults to ["openid"].
+      scopes: ["openid", "profile"]
+
+      # OIDC authorization endpoint. Required if provider discovery is disabled.
+      authorization_endpoint: "https://auth.example.com/auth/realms/realm/protocol/openid-connect/auth"
+
+      # OIDC token endpoint. Required if provider discovery is disabled.
+      token_endpoint: "https://auth.example.com/auth/realms/realm/protocol/openid-connect/token"
+
+      # OIDC userinfo endpoint. Required if discovery is disabled and the "openid" scope is not requested.
+      userinfo_endpoint: "https://auth.example.com/auth/realms/realm/protocol/openid-connect/userinfo"
+
+      # Uncomment to define JWKS URI. Required if discovery is disabled and the
+      # jwks_uri: "https://accounts.example.com/.well-known/jwks.json"
+
+      # Uncomment to skip metadata verification. Defaults to false.
+      skip_verification: false
+
+      # An external module can be provided here as a custom solution to mapping
+      # attributes returned from a OIDC provider onto a matrix user.
+      user_mapping_provider:
+        # module: mapping_provider.OidcMappingProvider
+        config:
+          subject_claim:
 
   # User registration settings
   registration:
@@ -109,18 +159,19 @@ matrix:
       ip:
         # whitelist:
         blacklist:
-          - '127.0.0.0/8'
-          - '10.0.0.0/8'
-          - '172.16.0.0/12'
-          - '192.168.0.0/16'
-          - '100.64.0.0/10'
-          - '169.254.0.0/16'
-          - '::1/128'
-          - 'fe80::/64'
-          - 'fc00::/7'
+          - "127.0.0.0/8"
+          - "10.0.0.0/8"
+          - "172.16.0.0/12"
+          - "192.168.0.0/16"
+          - "100.64.0.0/10"
+          - "169.254.0.0/16"
+          - "::1/128"
+          - "fe80::/64"
+          - "fc00::/7"
 
       # Whitelist and blacklist based on URL pattern matching
-      url: {}
+      url:
+        {}
         # whitelist:
         # blacklist:
         #  # blacklist any URL with a username in its URI
@@ -303,7 +354,7 @@ synapse:
   # Labels to be appended to all Synapse resources
   labels:
     component: synapse
-  
+
   # Prometheus metrics for Synapse
   # https://github.com/matrix-org/synapse/blob/master/docs/metrics-howto.md
   metrics:
@@ -312,7 +363,6 @@ synapse:
     # Port to listen on for metrics scraping
     port: 9092
     annotations: true
-
 
 # Element (formerly Riot Web) client configuration
 riot:
@@ -329,8 +379,8 @@ riot:
     authHeaderLogoUrl: ""
     # Array of links to show at the bottom of the login screen
     authFooterLinks: []
-#      - text:
-#        url:
+  #      - text:
+  #        url:
 
   # Element integrations configuration
   integrations:
@@ -400,7 +450,7 @@ coturn:
   # If deploying Coturn with this chart, include the public IPs of each node in your cluster (or a DNS round-robin hostname)
   # You can also include an external Coturn instance if you'd prefer
   uris: []
-#    - "turn:turn.example.com?transport=udp"
+  #    - "turn:turn.example.com?transport=udp"
 
   # How to deploy Coturn
   # Options:
@@ -476,11 +526,10 @@ mail:
     labels:
       component: mail
 
-  
   # External mail server
   external:
     host: ""
-    port: 25  # SSL: 465, STARTTLS: 587
+    port: 25 # SSL: 465, STARTTLS: 587
     username: ""
     password: ""
     requireTransportSecurity: true
