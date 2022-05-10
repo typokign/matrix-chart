@@ -48,10 +48,13 @@ matrix:
     # Max image size in pixels
     maxPixels: 32M
 
+  db:
+    engine: "sqlite3" #sets the database driver
+
   # Settings related to federation
   federation:
     # Set to false to disable federation and run an isolated homeserver
-    enabled: true
+    enabled: false
 
     # Set to false to disallow members of other homeservers from fetching *public* rooms
     allowPublicRooms: true
@@ -79,7 +82,7 @@ matrix:
     # If set, allows registration of standard or admin accounts by anyone who
     # has the shared secret, even if registration is otherwise disabled.
     #
-    # sharedSecret: <PRIVATE STRING>
+    sharedSecret: <WILL_BE_REPLACED>
 
     # Allow users to join rooms as a guest
     allowGuests: false
@@ -228,14 +231,14 @@ volumes:
     storageClass: ""
 
 ingress:
-  enabled: true
+  enabled: false
   # Whether to expose the federation API behind the Ingress
   # If you would rather use an external proxy to run federation on a port other than 443, set this to false and set the synapse.service.federation.type value to either LoadBalancer or NodePort
   federation: true
   tls: []
   hosts:
     synapse: matrix.chart-example.local
-    riot: element.chart-example.local
+    element: element.chart-example.local
     federation: matrix-fed.chart-example.local
   annotations:
     # This annotation is required for the Nginx ingress provider. You can remove it if you use a different ingress provider
@@ -245,7 +248,7 @@ ingress:
 # PostgreSQL Database Configuration
 postgresql:
   # Whether to deploy the stable/postgresql chart with this chart. If disabled, make sure PostgreSQL is available at the hostname below and credentials are configured below
-  enabled: true
+  enabled: false
 
   username: matrix
   password: matrix
@@ -257,7 +260,7 @@ postgresql:
 
   # Whether to connect to the database over SSL
   ssl: false
-  # See https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-PARAMKEYWORDS for documentation of these modes
+  # See https://wwwqpostgresql.org/docs/current/libpq-connect.html#LIBPQ-PARAMKEYWORDS for documentation of these modes
   sslMode: prefer
 
   # Storage to allocate for stable/postgresql
@@ -303,21 +306,21 @@ synapse:
   # Labels to be appended to all Synapse resources
   labels:
     component: synapse
-  
+
   # Prometheus metrics for Synapse
   # https://github.com/matrix-org/synapse/blob/master/docs/metrics-howto.md
   metrics:
     # Whether Synapse should capture metrics on an additional endpoint
-    enabled: true
+    enabled: false
     # Port to listen on for metrics scraping
     port: 9092
     annotations: true
 
 
-# Element (formerly Riot Web) client configuration
-riot:
+# Element (formerly element Web) client configuration
+element:
   # Set to false to disable a deployment of Element. Users will still be able to connect via any other instances of Element (such as https://app.element.io), Element Desktop, or any other Matrix clients
-  enabled: true
+  enabled: false
 
   # Organization/enterprise branding
   branding:
@@ -346,9 +349,9 @@ riot:
       - "https://scalar.vector.im/api"
       - "https://scalar-staging.vector.im/_matrix/integrations/v1"
       - "https://scalar-staging.vector.im/api"
-      - "https://scalar-staging.riot.im/scalar/api"
+      - "https://scalar-staging.element.im/scalar/api"
 
-  # Experimental features in Element, see https://github.com/vector-im/riot-web/blob/develop/docs/labs.md
+  # Experimental features in Element, see https://github.com/vector-im/element-web/blob/develop/docs/labs.md
   labs:
     - feature_new_spinner
     - feature_pinning
@@ -374,7 +377,7 @@ riot:
 
   # Element Kubernetes resource settings
   image:
-    repository: "vectorim/riot-web"
+    repository: "vectorim/element-web"
     tag: v1.7.12
     pullPolicy: IfNotPresent
   service:
@@ -394,7 +397,7 @@ riot:
 # Settings for Coturn TURN relay, used for routing voice calls
 coturn:
   # Set to false to disable the included deployment of Coturn
-  enabled: true
+  enabled: false
 
   # URIs of the Coturn servers
   # If deploying Coturn with this chart, include the public IPs of each node in your cluster (or a DNS round-robin hostname)
@@ -448,17 +451,17 @@ coturn:
 mail:
   # Set to false to disable all email notifications
   # NOTE: If enabled, either enable the Exim relay or configure an external mail server below
-  enabled: true
+  enabled: false
   # Name and email address for outgoing mail
   from: "Matrix <matrix@example.com>"
   # Optional: Element instance URL.
   # If the ingress is enabled, this is unnecessary.
   # If the ingress is disabled and this is left unspecified, emails will contain a link to https://app.element.io
-  riotUrl: ""
+  elementUrl: ""
 
   # Exim relay
   relay:
-    enabled: true
+    enabled: false
     image:
       repository: "devture/exim-relay"
       tag: "4.93.1-r0"
@@ -476,7 +479,7 @@ mail:
     labels:
       component: mail
 
-  
+
   # External mail server
   external:
     host: ""
@@ -690,4 +693,4 @@ nameOverride: ""
 fullnameOverride: ""
 
 networkPolicies:
-  enabled: true
+  enabled: false
