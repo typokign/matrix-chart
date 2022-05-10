@@ -55,9 +55,8 @@ Synapse specific labels
 {{/*
 Element specific labels
 */}}
-#TOOO: Change riot to element
 {{- define "matrix.element.labels" -}}
-{{- range $key, $val := .Values.riot.labels }}
+{{- range $key, $val := .Values.element.labels }}
 {{ $key }}: {{ $val }}
 {{- end }}
 {{- end -}}

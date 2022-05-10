@@ -28,24 +28,24 @@ spec:
     - host: {{ .Values.ingress.hosts.synapse }}
       http:
         paths:
-          - path: "/"
+          - path: "/*"
             backend:
               serviceName: "{{ include "matrix.fullname" . }}-synapse"
               servicePort: {{ .Values.synapse.service.port }}
-    {{- if .Values.riot.enabled }}
-    - host: {{ .Values.ingress.hosts.riot }}
+    {{- if .Values.element.enabled }}
+    - host: {{ .Values.ingress.hosts.element }}
       http:
         paths:
-          - path: "/"
+          - path: "/*"
             backend:
-              serviceName: "{{ include "matrix.fullname" . }}-riot"
-              servicePort: {{ .Values.riot.service.port }}
+              serviceName: "{{ include "matrix.fullname" . }}-element"
+              servicePort: {{ .Values.element.service.port }}
     {{- end }}
     {{- if .Values.ingress.federation }}
     - host: {{ .Values.ingress.hosts.federation }}
       http:
         paths:
-          - path: "/"
+          - path: "/*"
             backend:
               serviceName: "{{ include "matrix.fullname" . }}-synapse-federation"
               servicePort: {{ .Values.synapse.service.federation.port }}
