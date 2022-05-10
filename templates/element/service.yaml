@@ -1,19 +1,19 @@
-{{- if .Values.riot.enabled }}
+{{- if .Values.element.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "matrix.fullname" . }}-riot
+  name: {{ include "matrix.fullname" . }}-element
   labels:
 {{ include "matrix.labels" . | indent 4 }}
 {{ include "matrix.element.labels" . | indent 4}}
 spec:
-  type: {{ .Values.riot.service.type }}
+  type: {{ .Values.element.service.type }}
   ports:
-    - port: {{ .Values.riot.service.port }}
-      targetPort: http
+    - port: {{ .Values.element.service.port }}
+      targetPort: 8080
       protocol: TCP
       name: http
   selector:
-    app.kubernetes.io/name: {{ include "matrix.name" . }}-riot
+    app.kubernetes.io/name: {{ include "matrix.name" . }}-element
     app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
