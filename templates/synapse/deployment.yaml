@@ -22,18 +22,17 @@ spec:
         app.kubernetes.io/name: {{ include "matrix.name" . }}-synapse
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
+      securityContext:
+        runAsUser: 991
+        fsGroup: 991
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      securityContext:
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 1000
       # generate signing key only on fresh install
-      {{- if .Release.IsInstall }}
       initContainers:
-        - name: generate-signing-key
+      {{- if .Release.IsInstall }}
+        - name: generate-configuration
           image: "{{ .Values.synapse.image.repository }}:{{ .Values.synapse.image.tag }}"
           imagePullPolicy: {{ .Values.synapse.image.pullPolicy }}
           env:
@@ -41,15 +40,7 @@ spec:
               value: {{ .Values.matrix.serverName }}
             - name: SYNAPSE_REPORT_STATS
               value: {{ .Values.matrix.telemetry | ternary "yes" "no" | quote }}
-          command: ["python"]
-          args:
-            - "-m"
-            - "synapse.app.homeserver"
-            - "--config-path"
-            - "/data/homeserver.yaml"
-            - "--keys-directory"
-            - "/data/keys"
-            - "--generate-keys"
+          args: ["generate"]
           volumeMounts:
             - name: synapse-config
               mountPath: /data
@@ -60,11 +51,6 @@ spec:
         - name: "synapse"
           image: "{{ .Values.synapse.image.repository }}:{{ .Values.synapse.image.tag }}"
           imagePullPolicy: {{ .Values.synapse.image.pullPolicy }}
-          env:
-            - name: UID
-              value: "1000"
-            - name: GID
-              value: "1000"
           ports:
             - name: http
               containerPort: 8008
@@ -81,10 +67,9 @@ spec:
               mountPath: /data/keys
             - name: media-store
               mountPath: /data/media_store
-            {{- if or .Values.bridges.whatsapp.enabled .Values.bridges.discord.enabled .Values.bridges.irc.enabled }}
-            - name: bridges
-              mountPath: /bridges
-              readOnly: true
+            {{- if eq .Values.matrix.db.engine "sqlite3" }}
+            - name: sqlite3-db
+              mountPath: /data/db
             {{- end }}
             - name: uploads
               mountPath: /data/uploads
@@ -131,10 +116,10 @@ spec:
         - name: media-store
           persistentVolumeClaim:
             claimName: {{ include "matrix.fullname" . }}-media-store
-        {{- if or .Values.bridges.whatsapp.enabled .Values.bridges.discord.enabled .Values.bridges.irc.enabled }}
-        - name: bridges
+        {{- if eq .Values.matrix.db.engine "sqlite3" }}
+        - name: sqlite3-db
           persistentVolumeClaim:
-            claimName: {{ include "matrix.fullname" . }}-bridges
+            claimName: {{ include "matrix.fullname" . }}-sqlite3-db
         {{- end }}
         # Ephemeral in-progress uploads
         - name: uploads

@@ -1,0 +1,15 @@
+{{- if eq .Values.matrix.db.engine "sqlite3" }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "matrix.fullname" . }}-sqlite3-db
+  labels:
+{{ include "matrix.labels" . | indent 4}}
+{{ include "matrix.synapse.labels" . | indent 4}}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+{{- end }}
