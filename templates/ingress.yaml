@@ -28,26 +28,26 @@ spec:
     - host: {{ .Values.ingress.hosts.synapse }}
       http:
         paths:
-          - path: "/*"
-            backend:
+          - backend:
+              serviceName: ssl-redirect
+              servicePort: use-annotation
+            path: /*
+          - backend:
               serviceName: "{{ include "matrix.fullname" . }}-synapse"
-              servicePort: {{ .Values.synapse.service.port }}
+              servicePort: 80
+            path: /*
     {{- if .Values.element.enabled }}
     - host: {{ .Values.ingress.hosts.element }}
       http:
         paths:
-          - path: "/*"
-            backend:
+          - backend:
+              serviceName: ssl-redirect
+              servicePort: use-annotation
+            path: /*
+          - backend:
               serviceName: "{{ include "matrix.fullname" . }}-element"
-              servicePort: {{ .Values.element.service.port }}
-    {{- end }}
-    {{- if .Values.ingress.federation }}
-    - host: {{ .Values.ingress.hosts.federation }}
-      http:
-        paths:
-          - path: "/*"
-            backend:
-              serviceName: "{{ include "matrix.fullname" . }}-synapse-federation"
-              servicePort: {{ .Values.synapse.service.federation.port }}
+              servicePort: 80
+            path: /*
+            pathType: ImplementationSpecific
     {{- end }}
 {{- end }}
