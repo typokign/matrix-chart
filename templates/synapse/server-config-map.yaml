@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "matrix.fullname" . }}-synapse-config
+  labels:
+{{ include "matrix.labels" . | nindent 4}}
+{{ include "matrix.synapse.labels" . | nindent 4}}
+data:
+  homeserver.yaml: |
+    {{ include "homeserver.yaml" . | nindent 4 }}

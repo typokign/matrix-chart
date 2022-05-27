@@ -15,9 +15,6 @@ spec:
     type: Recreate
   template:
     metadata:
-      annotations:
-        # re-roll deployment on homeserver.yaml change
-        checksum/synapse-config: {{ include (print $.Template.BasePath "/synapse/configmap.yaml") . | sha256sum }}
       labels:
         app.kubernetes.io/name: {{ include "matrix.name" . }}-synapse
         app.kubernetes.io/instance: {{ .Release.Name }}
@@ -26,14 +23,39 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      securityContext:
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 1000
-      # generate signing key only on fresh install
-      {{- if .Release.IsInstall }}
       initContainers:
-        - name: generate-signing-key
+        - name: load-hs
+          image: shire.jfrog.io/shire-docker/hs-config-builder:0.1.3
+          env:
+            - name: HOMESERVER_YAML
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "matrix.fullname" . }}-synapse-config
+                  # Specify the key associated with the value
+                  key: homeserver.yaml
+            - name: SHARED_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secret
+                  # Specify the key associated with the value
+                  key: shared_secret
+          volumeMounts:
+            - name: synapse-config
+              mountPath: /data
+        - name: set-perms
+          image: busybox
+          command: ["/bin/chown","-R","991:991", "/data"]
+          volumeMounts:
+            - name: synapse-config
+              mountPath: /data
+            - name: signing-key
+              mountPath: /data/keys
+            {{- if eq .Values.matrix.db.engine "sqlite3" }}
+            - name: sqlite3-db
+              mountPath: /data/db
+            {{- end }}
+      {{- if .Release.IsInstall }}
+        - name: generate-configuration
           image: "{{ .Values.synapse.image.repository }}:{{ .Values.synapse.image.tag }}"
           imagePullPolicy: {{ .Values.synapse.image.pullPolicy }}
           env:
@@ -41,30 +63,19 @@ spec:
               value: {{ .Values.matrix.serverName }}
             - name: SYNAPSE_REPORT_STATS
               value: {{ .Values.matrix.telemetry | ternary "yes" "no" | quote }}
-          command: ["python"]
-          args:
-            - "-m"
-            - "synapse.app.homeserver"
-            - "--config-path"
-            - "/data/homeserver.yaml"
-            - "--keys-directory"
-            - "/data/keys"
-            - "--generate-keys"
+          args: ["generate"]
           volumeMounts:
             - name: synapse-config
               mountPath: /data
             - name: signing-key
               mountPath: /data/keys
+            - name: log-config
+              mountPath: /app/config
       {{- end }} {{/* end if .Release.IsInstall */}}
       containers:
         - name: "synapse"
           image: "{{ .Values.synapse.image.repository }}:{{ .Values.synapse.image.tag }}"
           imagePullPolicy: {{ .Values.synapse.image.pullPolicy }}
-          env:
-            - name: UID
-              value: "1000"
-            - name: GID
-              value: "1000"
           ports:
             - name: http
               containerPort: 8008
@@ -77,14 +88,15 @@ spec:
           volumeMounts:
             - name: synapse-config
               mountPath: /data
+            - name: log-config
+              mountPath: /app/config
             - name: signing-key
               mountPath: /data/keys
             - name: media-store
               mountPath: /data/media_store
-            {{- if or .Values.bridges.whatsapp.enabled .Values.bridges.discord.enabled .Values.bridges.irc.enabled }}
-            - name: bridges
-              mountPath: /bridges
-              readOnly: true
+            {{- if eq .Values.matrix.db.engine "sqlite3" }}
+            - name: sqlite3-db
+              mountPath: /data/db
             {{- end }}
             - name: uploads
               mountPath: /data/uploads
@@ -111,33 +123,29 @@ spec:
             {{- if .Values.synapse.probes.liveness }}
             {{- toYaml .Values.synapse.probes.liveness | nindent 12 }}
             {{- end }}
-          securityContext:
-            capabilities:
-              drop:
-                - ALL
-            readOnlyRootFilesystem: true
-            allowPrivilegeEscalation: false
           {{- with .Values.synapse.resources }}
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
       volumes:
-        - name: synapse-config
+        - name: log-config
           configMap:
-            name: {{ include "matrix.fullname" . }}-synapse-config
+            name: {{ include "matrix.fullname" . }}-synapse-log-config
         - name: signing-key
           persistentVolumeClaim:
             claimName: {{ include "matrix.fullname" . }}-signing-key
         - name: media-store
           persistentVolumeClaim:
             claimName: {{ include "matrix.fullname" . }}-media-store
-        {{- if or .Values.bridges.whatsapp.enabled .Values.bridges.discord.enabled .Values.bridges.irc.enabled }}
-        - name: bridges
+        {{- if eq .Values.matrix.db.engine "sqlite3" }}
+        - name: sqlite3-db
           persistentVolumeClaim:
-            claimName: {{ include "matrix.fullname" . }}-bridges
+            claimName: {{ include "matrix.fullname" . }}-sqlite3-db
         {{- end }}
         # Ephemeral in-progress uploads
         - name: uploads
           emptyDir: {}
         - name: tmp
+          emptyDir: {}
+        - name: synapse-config
           emptyDir: {}
