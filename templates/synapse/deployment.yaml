@@ -26,10 +26,12 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- if .Values.securityContext.enabled }}
       securityContext:
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 1000
+        runAsUser: {{ .Values.securityContext.runAsUser | default 1000}}
+        runAsGroup: {{ .Values.securityContext.runAsGroup | default 1000}}
+        fsGroup: {{ .Values.securityContext.fsGroup }}
+      {{- end }}
       # generate signing key only on fresh install
       {{- if .Release.IsInstall }}
       initContainers:
