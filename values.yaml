@@ -300,6 +300,13 @@ synapse:
       timeoutSeconds: 5
       periodSeconds: 10
 
+  # Does not work by default in all cloud providers, disable by default
+  securityContext:
+    enabled: false
+    runAsUser: 1000
+    runAsGroup: 1000
+    fsGroup: 1000
+
   # Labels to be appended to all Synapse resources
   labels:
     component: synapse

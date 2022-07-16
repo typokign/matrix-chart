@@ -30,7 +30,7 @@ spec:
       securityContext:
         runAsUser: {{ .Values.securityContext.runAsUser | default 1000}}
         runAsGroup: {{ .Values.securityContext.runAsGroup | default 1000}}
-        fsGroup: {{ .Values.securityContext.fsGroup }}
+        fsGroup: {{ .Values.securityContext.fsGroup | default 1000}}
       {{- end }}
       # generate signing key only on fresh install
       {{- if .Release.IsInstall }}
