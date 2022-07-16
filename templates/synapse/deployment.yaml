@@ -62,12 +62,13 @@ spec:
         - name: "synapse"
           image: "{{ .Values.synapse.image.repository }}:{{ .Values.synapse.image.tag }}"
           imagePullPolicy: {{ .Values.synapse.image.pullPolicy }}
-          {{- if .Values.synapse.securityContext.enabled -}}
+          {{- if .Values.synapse.securityContext.enabled }}
           env:
             - name: UID
               value: "{{ .Values.synapse.securityContext.runAsUser }}"
             - name: GID
               value: "{{ .Values.synapse.securityContext.runAsGroup }}"
+          {{- end }}
           ports:
             - name: http
               containerPort: 8008
