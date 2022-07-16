@@ -26,11 +26,11 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- if .Values.securityContext.enabled }}
+      {{- if .Values.synapse.securityContext.enabled }}
       securityContext:
-        runAsUser: {{ .Values.securityContext.runAsUser | default 1000}}
-        runAsGroup: {{ .Values.securityContext.runAsGroup | default 1000}}
-        fsGroup: {{ .Values.securityContext.fsGroup | default 1000}}
+        runAsUser: {{ .Values.synapse.securityContext.runAsUser }}
+        runAsGroup: {{ .Values.synapse.securityContext.runAsGroup }}
+        fsGroup: {{ .Values.synapse.securityContext.fsGroup }}
       {{- end }}
       # generate signing key only on fresh install
       {{- if .Release.IsInstall }}
@@ -62,11 +62,12 @@ spec:
         - name: "synapse"
           image: "{{ .Values.synapse.image.repository }}:{{ .Values.synapse.image.tag }}"
           imagePullPolicy: {{ .Values.synapse.image.pullPolicy }}
+          {{- if .Values.synapse.securityContext.enabled -}}
           env:
             - name: UID
-              value: "1000"
+              value: "{{ .Values.synapse.securityContext.runAsUser }}"
             - name: GID
-              value: "1000"
+              value: "{{ .Values.synapse.securityContext.runAsGroup }}"
           ports:
             - name: http
               containerPort: 8008
