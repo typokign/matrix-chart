@@ -302,10 +302,14 @@ synapse:
 
   # Does not work by default in all cloud providers, disable by default
   securityContext:
-    enabled: false
     runAsUser: 1000
     runAsGroup: 1000
     fsGroup: 1000
+    runAsNonRoot: true
+
+    # Enable if your k8s environment allows containers to chuser/setuid
+    # https://github.com/matrix-org/synapse/blob/96cf81e312407f0caba1b45ba9899906b1dcc098/docker/start.py#L196
+    env: false
 
   # Labels to be appended to all Synapse resources
   labels:
