@@ -93,6 +93,9 @@ matrix:
     autoJoinRooms: []
     # - "#welcome:example.com"
 
+    # Whether to allow token based registration
+    requiresToken: false
+
   # Settings for the URL preview crawler
   urlPreviews:
     # Enable URL previews.
