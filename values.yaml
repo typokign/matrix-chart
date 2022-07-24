@@ -373,7 +373,7 @@ element:
   # Element Kubernetes resource settings
   image:
     repository: "vectorim/element-web"
-    tag: v1.7.12
+    tag: v1.10.14
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP

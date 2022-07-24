@@ -111,3 +111,33 @@ postgres://{{ .Values.postgresql.username }}:{{ .Values.postgresql.password }}@{
 postgres://{{ .Values.postgresql.username }}:{{ .Values.postgresql.password }}@{{ .Values.postgresql.hostname }}:{{ .Values.postgresql.port }}/%s{{ if .Values.postgresql.ssl }}?ssl=true&sslmode={{ .Values.postgresql.sslMode }}{{ end }}
 {{- end }}
 {{- end }}
+
+{{/*
+Helper functions for postgres
+*/}}
+{{- define "matrix.psqluser" -}}
+{{- $postgresSecret := (lookup "v1" "Secret" .Release.Namespace "postgres-db" ) | default dict -}}
+{{- $secretData := (get $postgresSecret "data" | default dict ) -}}
+{{- $username := (get $secretData "user") -}}
+
+{{- if $username -}}
+{{- $username -}}
+{{- else if .Values.postgresql.username -}}
+{{ .Values.postgresql.username }}
+{{- else -}}
+matrix
+{{- end -}}
+{{- end -}}
+
+{{- define "matrix.psqlpass" -}}
+{{- $postgresSecret := (lookup "v1" "Secret" .Release.Namespace "postgres-db" ) | default dict -}}
+{{- $secretData := (get $postgresSecret "data" | default dict ) -}}
+{{- $password := (get $secretData "password") -}}
+{{- if $password -}}
+{{- $password -}}
+{{- else if .Values.postgresql.password -}}
+{{- .Values.postgresql.password -}}
+{{- else -}}
+{{- randAlphaNum 32 -}}
+{{- end -}}
+{{- end -}}
