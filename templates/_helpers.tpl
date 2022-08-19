@@ -112,3 +112,13 @@ postgres://{{ .Values.postgresql.username }}:{{ .Values.postgresql.password }}@{
 postgres://{{ .Values.postgresql.username }}:{{ .Values.postgresql.password }}@{{ .Values.postgresql.hostname }}:{{ .Values.postgresql.port }}/%s{{ if .Values.postgresql.ssl }}?ssl=true&sslmode={{ .Values.postgresql.sslMode }}{{ end }}
 {{- end }}
 {{- end }}
+
+{{/*
+Helper function to get postgres instance name
+*/}}
+{{- define "postgresql.name" -}}
+{{- if .Values.postgresql.enabled -}}
+{{ include "matrix.fullname" . }}-postgresql
+{{- end }}
+{{- end }}
+
