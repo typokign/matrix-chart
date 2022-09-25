@@ -975,6 +975,10 @@ registrations_require_3pid:
     {{- end }}
 {{- end }}
 
+{{- if .Values.matrix.registration.requiresToken }}
+registration_requires_token: {{ .Values.matrix.registration.requiresToken }}
+{{- end }}
+
 # Explicitly disable asking for MSISDNs from the registration
 # flow (overrides registrations_require_3pid if MSISDNs are set as required)
 #

@@ -26,10 +26,20 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      
       securityContext:
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 1000
+        {{- if .Values.synapse.securityContext.runAsUser }}
+        runAsUser: {{ .Values.synapse.securityContext.runAsUser }}
+        {{- end }}
+        {{- if .Values.synapse.securityContext.runAsGroup }}
+        runAsGroup: {{ .Values.synapse.securityContext.runAsGroup }}
+        {{- end }}
+        {{- if .Values.synapse.securityContext.fsGroup }}
+        fsGroup: {{ .Values.synapse.securityContext.fsGroup }}
+        {{- end}}
+        {{- if .Values.synapse.securityContext.runAsNonRoot }}
+        runAsNonRoot: {{ .Values.synapse.securityContext.runAsNonRoot }}
+        {{- end }}
       # generate signing key only on fresh install
       {{- if .Release.IsInstall }}
       initContainers:
@@ -61,10 +71,16 @@ spec:
           image: "{{ .Values.synapse.image.repository }}:{{ .Values.synapse.image.tag }}"
           imagePullPolicy: {{ .Values.synapse.image.pullPolicy }}
           env:
+            {{- if .Values.synapse.securityContext.env }}
+            {{- if .Values.synapse.securityContext.runAsUser }}
             - name: UID
-              value: "1000"
+              value: "{{ .Values.synapse.securityContext.runAsUser }}"
+            {{- end }}
+            {{- if .Values.synapse.securityContext.runAsGroup }}
             - name: GID
-              value: "1000"
+              value: "{{ .Values.synapse.securityContext.runAsGroup }}"
+            {{- end }}
+            {{- end }}
           ports:
             - name: http
               containerPort: 8008
