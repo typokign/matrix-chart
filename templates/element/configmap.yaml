@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "matrix.fullname" . }}-riot-config
+  name: {{ include "matrix.fullname" . }}-element-web-config
   labels:
 {{ include "matrix.labels" . | nindent 4}}
 {{ include "matrix.element.labels" . | indent 4}}
@@ -13,43 +13,43 @@ data:
           "base_url": {{ include "matrix.baseUrl" . | quote }}
         }
       },
-      "brand": {{ .Values.riot.branding.brand | quote }},
+      "brand": {{ .Values.element-web.branding.brand | quote }},
       "branding": {
-        {{- if .Values.riot.branding.welcomeBackgroundUrl }}
-        "welcomeBackgroundUrl": {{ .Values.riot.branding.welcomeBackgroundUrl | quote }},
+        {{- if .Values.element-web.branding.welcomeBackgroundUrl }}
+        "welcomeBackgroundUrl": {{ .Values.element-web.branding.welcomeBackgroundUrl | quote }},
         {{- end }}
-        {{- if .Values.riot.branding.authHeaderLogoUrl }}
-        "authHeaderLogoUrl": {{ .Values.riot.branding.authHeaderLogoUrl | quote }},
+        {{- if .Values.element-web.branding.authHeaderLogoUrl }}
+        "authHeaderLogoUrl": {{ .Values.element-web.branding.authHeaderLogoUrl | quote }},
         {{- end }}
-        {{- if .Values.riot.branding.authFooterLinks }}
-        "authFooterLinks": {{ .Values.riot.branding.authFooterLinks | toJson }},
+        {{- if .Values.element-web.branding.authFooterLinks }}
+        "authFooterLinks": {{ .Values.element-web.branding.authFooterLinks | toJson }},
         {{- end }}
       },
-      {{- if .Values.riot.integrations.enabled }}
-      "integrations_ui_url": {{ .Values.riot.integrations.ui | quote }},
-      "integrations_rest_url": {{ .Values.riot.integrations.api | quote }},
-      "integrations_widgets_urls": {{ .Values.riot.integrations.widgets | toJson }},
+      {{- if .Values.element-web.integrations.enabled }}
+      "integrations_ui_url": {{ .Values.element-web.integrations.ui | quote }},
+      "integrations_rest_url": {{ .Values.element-web.integrations.api | quote }},
+      "integrations_widgets_urls": {{ .Values.element-web.integrations.widgets | toJson }},
       {{- end }}
-      {{- if .Values.riot.labs }} {{/* if not empty */}}
+      {{- if .Values.element-web.labs }} {{/* if not empty */}}
       "showLabsSettings": true,
       {{- else }}
       "showLabsSettings": false,
       {{- end }}
       "features": {
-        {{- if .Values.riot.labs }}
-        {{- range initial .Values.riot.labs }}
+        {{- if .Values.element-web.labs }}
+        {{- range initial .Values.element-web.labs }}
         {{ . | quote }}: "labs",
         {{- end }}
-        {{ last .Values.riot.labs | quote }}: "labs"
+        {{ last .Values.element-web.labs | quote }}: "labs"
         {{- end }}
       },
       "roomDirectory": {
-        "servers": {{ .Values.riot.roomDirectoryServers | toJson }}
+        "servers": {{ .Values.element-web.roomDirectoryServers | toJson }}
       },
-      {{- if .Values.riot.welcomeUserId }}
-      "welcomeUserId": {{ .Values.riot.welcomeUserId | quote }},
+      {{- if .Values.element-web.welcomeUserId }}
+      "welcomeUserId": {{ .Values.element-web.welcomeUserId | quote }},
       {{- end }}
-      "permalinkPrefix": {{ .Values.riot.permalinkPrefix | quote }}
+      "permalinkPrefix": {{ .Values.element-web.permalinkPrefix | quote }}
     }
   nginx.conf: |
     worker_processes  auto;

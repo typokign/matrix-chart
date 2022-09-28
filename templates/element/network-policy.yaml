@@ -1,15 +1,15 @@
-{{- if and .Values.networkPolicies.enabled .Values.riot.enabled }}
+{{- if and .Values.networkPolicies.enabled .Values.element-web.enabled }}
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: {{ include "matrix.fullname" . }}-riot
+  name: {{ include "matrix.fullname" . }}-element-web
   labels:
 {{ include "matrix.labels" . | indent 4 }}
 {{ include "matrix.element.labels" . | indent 4}}
 spec:
   podSelector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "matrix.fullname" . }}-riot
+      app.kubernetes.io/name: {{ include "matrix.fullname" . }}-element-web
       app.kubernetes.io/instance: {{ .Release.Name }}
   policyTypes:
     - Ingress
