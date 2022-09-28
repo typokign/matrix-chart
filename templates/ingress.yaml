@@ -1,5 +1,7 @@
 {{- if .Values.ingress.enabled -}}
-{{- if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
+{{- if semverCompare ">=1.19-0" .Capabilities.KubeVersion.GitVersion -}}
+apiVersion: networking.k8s.io/v1
+{{- else if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
 apiVersion: networking.k8s.io/v1beta1
 {{- else -}}
 apiVersion: extensions/v1beta1
@@ -32,6 +34,7 @@ spec:
             backend:
               serviceName: "{{ include "matrix.fullname" . }}-synapse"
               servicePort: {{ .Values.synapse.service.port }}
+            pathType: ImplementationSpecific
     {{- if .Values.element.enabled }}
     - host: {{ .Values.ingress.hosts.element }}
       http:
@@ -40,6 +43,7 @@ spec:
             backend:
               serviceName: "{{ include "matrix.fullname" . }}-element"
               servicePort: {{ .Values.element.service.port }}
+            pathType: ImplementationSpecific
     {{- end }}
     {{- if .Values.ingress.federation }}
     - host: {{ .Values.ingress.hosts.federation }}
@@ -49,5 +53,6 @@ spec:
             backend:
               serviceName: "{{ include "matrix.fullname" . }}-synapse-federation"
               servicePort: {{ .Values.synapse.service.federation.port }}
+            pathType: ImplementationSpecific
     {{- end }}
 {{- end }}
