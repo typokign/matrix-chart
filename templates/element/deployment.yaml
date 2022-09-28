@@ -1,24 +1,24 @@
-{{- if .Values.element-web.enabled }}
+{{- if .Values.element.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "matrix.fullname" . }}-element-web
+  name: {{ include "matrix.fullname" . }}-element
   labels:
 {{ include "matrix.labels" . | indent 4 }}
 {{ include "matrix.element.labels" . | indent 4}}
 spec:
-  replicas: {{ .Values.element-web.replicaCount }}
+  replicas: {{ .Values.element.replicaCount }}
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "matrix.name" . }}-element-web
+      app.kubernetes.io/name: {{ include "matrix.name" . }}-element
       app.kubernetes.io/instance: {{ .Release.Name }}
   template:
     metadata:
       annotations:
         # re-roll deployment on config change
-        checksum/element-web-config: {{ include (print $.Template.BasePath "/element-web/configmap.yaml") . | sha256sum }}
+        checksum/element-config: {{ include (print $.Template.BasePath "/element/configmap.yaml") . | sha256sum }}
       labels:
-        app.kubernetes.io/name: {{ include "matrix.name" . }}-element-web
+        app.kubernetes.io/name: {{ include "matrix.name" . }}-element
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
       {{- with .Values.imagePullSecrets }}
@@ -30,24 +30,24 @@ spec:
         runAsGroup: 1000
         fsGroup: 1000
       containers:
-        - name: "element-web"
-          image: "{{ .Values.element-web.image.repository }}:{{ .Values.element-web.image.tag }}"
-          imagePullPolicy: {{ .Values.element-web.image.pullPolicy }}
+        - name: "element"
+          image: "{{ .Values.element.image.repository }}:{{ .Values.element.image.tag }}"
+          imagePullPolicy: {{ .Values.element.image.pullPolicy }}
           ports:
             - name: http
               containerPort: 8080
               protocol: TCP
           volumeMounts:
             - mountPath: /app/config.json
-              name: element-web-config
+              name: element-config
               subPath: config.json
               readOnly: true
             - mountPath: /etc/nginx/nginx.conf
-              name: element-web-config
+              name: element-config
               subPath: nginx.conf
               readOnly: true
             - mountPath: /etc/nginx/conf.d/default.conf
-              name: element-web-config
+              name: element-config
               subPath: default.conf
               readOnly: true
             - mountPath: /var/cache/nginx
@@ -60,22 +60,22 @@ spec:
             httpGet:
               path: /
               port: http
-            {{- if .Values.element-web.probes.readiness }}
-            {{- toYaml .Values.element-web.probes.readiness | nindent 12 }}
+            {{- if .Values.element.probes.readiness }}
+            {{- toYaml .Values.element.probes.readiness | nindent 12 }}
             {{- end }}
           startupProbe:
             httpGet:
               path: /
               port: http
-            {{- if .Values.element-web.probes.startup }}
-            {{- toYaml .Values.element-web.probes.startup | nindent 12 }}
+            {{- if .Values.element.probes.startup }}
+            {{- toYaml .Values.element.probes.startup | nindent 12 }}
             {{- end }}
           livenessProbe:
             httpGet:
               path: /
               port: http
-            {{- if .Values.element-web.probes.liveness }}
-            {{- toYaml .Values.element-web.probes.liveness | nindent 12 }}
+            {{- if .Values.element.probes.liveness }}
+            {{- toYaml .Values.element.probes.liveness | nindent 12 }}
             {{- end }}
           securityContext:
             capabilities:
@@ -83,14 +83,14 @@ spec:
                 - ALL
             readOnlyRootFilesystem: true
             allowPrivilegeEscalation: false
-          {{- with .Values.element-web.resources }}
+          {{- with .Values.element.resources }}
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
       volumes:
-        - name: element-web-config
+        - name: element-config
           configMap:
-            name: {{ include "matrix.fullname" . }}-element-web-config
+            name: {{ include "matrix.fullname" . }}-element-config
         # ephemeral cache, PID file, and any other temporary files nginx needs access to
         - name: ephemeral
           emptyDir: {}

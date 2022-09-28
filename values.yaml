@@ -238,7 +238,7 @@ ingress:
   tls: []
   hosts:
     synapse: matrix.chart-example.local
-    riot: element.chart-example.local
+    element: element.chart-example.local
     federation: matrix-fed.chart-example.local
   annotations:
     # This annotation is required for the Nginx ingress provider. You can remove it if you use a different ingress provider
@@ -328,8 +328,8 @@ synapse:
     annotations: true
 
 
-# Element (formerly Riot Web) client configuration
-riot:
+# Element Web (formerly Riot Web) client configuration
+element:
   # Set to false to disable a deployment of Element. Users will still be able to connect via any other instances of Element (such as https://app.element.io), Element Desktop, or any other Matrix clients
   enabled: true
 
@@ -360,9 +360,9 @@ riot:
       - "https://scalar.vector.im/api"
       - "https://scalar-staging.vector.im/_matrix/integrations/v1"
       - "https://scalar-staging.vector.im/api"
-      - "https://scalar-staging.riot.im/scalar/api"
+      - "https://scalar-staging.element.im/scalar/api"
 
-  # Experimental features in Element, see https://github.com/vector-im/riot-web/blob/develop/docs/labs.md
+  # Experimental features in Element, see https://github.com/vector-im/element-web/blob/develop/docs/labs.md
   labs:
     - feature_new_spinner
     - feature_pinning
@@ -388,7 +388,7 @@ riot:
 
   # Element Kubernetes resource settings
   image:
-    repository: "vectorim/riot-web"
+    repository: "vectorim/element-web"
     tag: v1.7.12
     pullPolicy: IfNotPresent
   service:
@@ -468,7 +468,7 @@ mail:
   # Optional: Element instance URL.
   # If the ingress is enabled, this is unnecessary.
   # If the ingress is disabled and this is left unspecified, emails will contain a link to https://app.element.io
-  riotUrl: ""
+  elementUrl: ""
 
   # Exim relay
   relay:

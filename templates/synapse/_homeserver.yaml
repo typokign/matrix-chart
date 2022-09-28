@@ -23,7 +23,7 @@ pid_file: /data/homeserver.pid
 # under the 'listeners' configuration, however this is a security risk:
 # https://github.com/matrix-org/synapse#security-note
 #
-#web_client_location: https://riot.example.com/
+#web_client_location: https://element.example.com/
 
 # The public-facing base URL that clients use to access this HS
 # (not including _matrix/...). This is the same URL a user would
@@ -1646,7 +1646,7 @@ sso:
     # By default, this list is empty.
     #
     #client_whitelist:
-    #  - https://riot.im/develop
+    #  - https://element.im/develop
     #  - https://my.custom.client/
 
     # Directory in which Synapse will try to find the template files below.
@@ -1860,12 +1860,12 @@ email:
   # Custom URL for client links within the email notifications. By default
   # links will be based on "https://matrix.to".
   #
-  # (This setting used to be called riot_base_url; the old name is still
+  # (This setting used to be called element_base_url; the old name is still
   # supported for backwards-compatibility but is now deprecated.)
-  {{- if .Values.mail.riotUrl }}
-  client_base_url: {{ .Values.mail.riotUrl }}
+  {{- if .Values.mail.elementUrl }}
+  client_base_url: {{ .Values.mail.elementUrl }}
   {{- else if .Values.ingress.enabled }}
-  client_base_url: {{ .Values.ingress.hosts.riot }}
+  client_base_url: {{ .Values.ingress.hosts.element }}
   {{- end }}
 
   # Configure the time that a validation email will expire after sending.

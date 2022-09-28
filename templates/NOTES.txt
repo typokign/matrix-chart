@@ -3,8 +3,8 @@ dacruz21/matrix-chart has been installed!
 
 Installed components:
  - Synapse ({{ .Values.synapse.image.repository }})
-{{- if .Values.riot.enabled }}
- - Element Web ({{ .Values.riot.image.repository }})
+{{- if .Values.element.enabled }}
+ - Element Web ({{ .Values.element.image.repository }})
 {{- end }}
 {{- if .Values.postgresql.enabled }}
  - PostgreSQL ({{ .Values.postgresql.image.repository }})
@@ -29,8 +29,8 @@ Thank you for installing dacruz21/matrix-chart! If you have any questions or run
 
 {{ if .Values.ingress.enabled }}
 Your Synapse homeserver should soon be available at https://{{ .Values.ingress.hosts.synapse }}
-{{- if .Values.riot.enabled }}
-Your Element Web instance should soon be available at https://{{ .Values.ingress.hosts.riot }}
+{{- if .Values.element.enabled }}
+Your Element Web instance should soon be available at https://{{ .Values.ingress.hosts.element }}
 {{- end }}
 {{- end }}
 

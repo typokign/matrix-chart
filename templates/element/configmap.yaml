@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "matrix.fullname" . }}-element-web-config
+  name: {{ include "matrix.fullname" . }}-element-config
   labels:
 {{ include "matrix.labels" . | nindent 4}}
 {{ include "matrix.element.labels" . | indent 4}}
@@ -13,43 +13,43 @@ data:
           "base_url": {{ include "matrix.baseUrl" . | quote }}
         }
       },
-      "brand": {{ .Values.element-web.branding.brand | quote }},
+      "brand": {{ .Values.element.branding.brand | quote }},
       "branding": {
-        {{- if .Values.element-web.branding.welcomeBackgroundUrl }}
-        "welcomeBackgroundUrl": {{ .Values.element-web.branding.welcomeBackgroundUrl | quote }},
+        {{- if .Values.element.branding.welcomeBackgroundUrl }}
+        "welcomeBackgroundUrl": {{ .Values.element.branding.welcomeBackgroundUrl | quote }},
         {{- end }}
-        {{- if .Values.element-web.branding.authHeaderLogoUrl }}
-        "authHeaderLogoUrl": {{ .Values.element-web.branding.authHeaderLogoUrl | quote }},
+        {{- if .Values.element.branding.authHeaderLogoUrl }}
+        "authHeaderLogoUrl": {{ .Values.element.branding.authHeaderLogoUrl | quote }},
         {{- end }}
-        {{- if .Values.element-web.branding.authFooterLinks }}
-        "authFooterLinks": {{ .Values.element-web.branding.authFooterLinks | toJson }},
+        {{- if .Values.element.branding.authFooterLinks }}
+        "authFooterLinks": {{ .Values.element.branding.authFooterLinks | toJson }},
         {{- end }}
       },
-      {{- if .Values.element-web.integrations.enabled }}
-      "integrations_ui_url": {{ .Values.element-web.integrations.ui | quote }},
-      "integrations_rest_url": {{ .Values.element-web.integrations.api | quote }},
-      "integrations_widgets_urls": {{ .Values.element-web.integrations.widgets | toJson }},
+      {{- if .Values.element.integrations.enabled }}
+      "integrations_ui_url": {{ .Values.element.integrations.ui | quote }},
+      "integrations_rest_url": {{ .Values.element.integrations.api | quote }},
+      "integrations_widgets_urls": {{ .Values.element.integrations.widgets | toJson }},
       {{- end }}
-      {{- if .Values.element-web.labs }} {{/* if not empty */}}
+      {{- if .Values.element.labs }} {{/* if not empty */}}
       "showLabsSettings": true,
       {{- else }}
       "showLabsSettings": false,
       {{- end }}
       "features": {
-        {{- if .Values.element-web.labs }}
-        {{- range initial .Values.element-web.labs }}
+        {{- if .Values.element.labs }}
+        {{- range initial .Values.element.labs }}
         {{ . | quote }}: "labs",
         {{- end }}
-        {{ last .Values.element-web.labs | quote }}: "labs"
+        {{ last .Values.element.labs | quote }}: "labs"
         {{- end }}
       },
       "roomDirectory": {
-        "servers": {{ .Values.element-web.roomDirectoryServers | toJson }}
+        "servers": {{ .Values.element.roomDirectoryServers | toJson }}
       },
-      {{- if .Values.element-web.welcomeUserId }}
-      "welcomeUserId": {{ .Values.element-web.welcomeUserId | quote }},
+      {{- if .Values.element.welcomeUserId }}
+      "welcomeUserId": {{ .Values.element.welcomeUserId | quote }},
       {{- end }}
-      "permalinkPrefix": {{ .Values.element-web.permalinkPrefix | quote }}
+      "permalinkPrefix": {{ .Values.element.permalinkPrefix | quote }}
     }
   nginx.conf: |
     worker_processes  auto;
