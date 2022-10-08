@@ -27,4 +27,4 @@ jobs:
           helm plugin install https://github.com/instrumenta/helm-kubeval
           helm dependency build
           helm lint
-          helm kubeval .
+          helm kubeval .``

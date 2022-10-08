@@ -32,8 +32,14 @@ spec:
         paths:
           - path: "/"
             backend:
+              {{- if semverCompare ">=1.19-0" .Capabilities.KubeVersion.GitVersion }}
+              service:
+                name: "{{ include "matrix.fullname" . }}-synapse"
+                port: {{ .Values.synapse.service.port }}
+              {{- else }}
               serviceName: "{{ include "matrix.fullname" . }}-synapse"
               servicePort: {{ .Values.synapse.service.port }}
+              {{- end }}
             pathType: ImplementationSpecific
     {{- if .Values.element.enabled }}
     - host: {{ .Values.ingress.hosts.element }}
@@ -41,8 +47,14 @@ spec:
         paths:
           - path: "/"
             backend:
+              {{- if semverCompare ">=1.19-0" .Capabilities.KubeVersion.GitVersion }}
+              service:
+                name: "{{ include "matrix.fullname" . }}-element"
+                port: {{ .Values.element.service.port }}
+              {{- else }}
               serviceName: "{{ include "matrix.fullname" . }}-element"
               servicePort: {{ .Values.element.service.port }}
+              {{- end }}
             pathType: ImplementationSpecific
     {{- end }}
     {{- if .Values.ingress.federation }}
@@ -51,8 +63,14 @@ spec:
         paths:
           - path: "/"
             backend:
+              {{- if semverCompare ">=1.19-0" .Capabilities.KubeVersion.GitVersion }}
+              service:
+                name: "{{ include "matrix.fullname" . }}-synapse-federation"
+                port: {{ .Values.synapse.service.federation.port }}
+              {{- else }}
               serviceName: "{{ include "matrix.fullname" . }}-synapse-federation"
               servicePort: {{ .Values.synapse.service.federation.port }}
+              {{- end }}
             pathType: ImplementationSpecific
     {{- end }}
 {{- end }}
