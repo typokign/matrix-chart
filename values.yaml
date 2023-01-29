@@ -327,6 +327,10 @@ synapse:
     port: 9092
     annotations: true
 
+  extraVolumes: []
+
+
+  extraVolumeMounts: []
 
 # Element Web (formerly Riot Web) client configuration
 element:

@@ -106,6 +106,9 @@ spec:
               mountPath: /data/uploads
             - name: tmp
               mountPath: /tmp
+            {{- if gt (len .Values.synapse.extraVolumeMounts) 0 }}
+            {{- toYaml .Values.synapse.extraVolumeMounts | nindent 12 }}
+            {{- end }}
           readinessProbe:
             httpGet:
               path: /_matrix/static/
@@ -157,3 +160,6 @@ spec:
           emptyDir: {}
         - name: tmp
           emptyDir: {}
+        {{- if gt (len .Values.synapse.extraVolumes) 0 }}
+        {{ toYaml .Values.synapse.extraVolumes | nindent 8}}
+        {{- end }}
