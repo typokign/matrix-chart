@@ -31,5 +31,9 @@ jobs:
       - name: Run chart-releaser
         id: helm-release
         uses: helm/chart-releaser-action@v1.4.0
+        with:
+          charts_dir: charts
+          charts_repo_url: https://github.com/Arkaniad/helm-charts.git
+          config: cr.yaml
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
